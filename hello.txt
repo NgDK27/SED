@@ -1,0 +1,15 @@
+Member:  
+1 list house info (consuming points, and minimum required occupier rating)
+2 search house in ? city (rating, creadit points)
+3 request occupy
+4 view all request to their house
+5 accpect request
+6 rate occupied houses
+
+House owner:
+1 list house info (consuming points, and minimum required occupier rating)
+2 search house in ? city (rating, creadit points)
+3 request occupy
+4 view all request to their house
+5 accpect request
+6 rate occupiers
