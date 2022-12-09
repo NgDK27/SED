@@ -55,50 +55,6 @@ public:
         return true;
     }
 
-    void memberMenu()
-    {
-        while (true)
-        {
-            cout << "1: List/ Unlist your house" << endl;
-            cout << "2: Search for houses" << endl;
-            if (!this->haveHouse())
-            {
-                cout << "3: Add your house" << endl;
-            }
-            else
-            {
-                cout << "3: Update your house info" << endl;
-            }
-            cout << "0: Exit" << endl;
-            cout << "Enter your choice: ";
-            int userInput;
-            cin >> userInput;
-            cout << endl;
-            if (userInput == 0)
-            {
-                return;
-            }
-            else if (userInput == 1)
-            {
-                if (this->house.isListed)
-                {
-                    this->unlistHouse();
-                }
-                else
-                {
-                    this->listHouse();
-                }
-            }
-            else if (userInput == 3)
-            {
-                if (!this->haveHouse())
-                {
-                    this->addHouse();
-                }
-            }
-        }
-    }
-
     void addHouse()
     {
         string location;
@@ -136,7 +92,53 @@ public:
         cout << endl;
         cout << "Successfully add a house to " << this->userName << endl
              << endl;
-        cout << this->toString() << endl;
+    }
+
+    void updateHouse()
+    {
+        cout << "1: Location" << endl;
+        cout << "2: Description" << endl;
+        cout << "0: Back" << endl;
+        cout << endl;
+        cout << "Note: to update listing date, you can unlist your current one and list it again" << endl;
+        cout << endl;
+        cout << "Select a field to update: ";
+        int userInput;
+        cin >> userInput;
+        cout << endl;
+        if (userInput == 0)
+        {
+            return;
+        }
+        else if (userInput == 1)
+        {
+            string location;
+            cout << "1: Ha Noi   2: Sai Gon   3: Hue" << endl;
+            cout << "Enter the new location of your house: ";
+            int locationInput;
+            cin >> locationInput;
+            if (locationInput == 1)
+            {
+                location = "Ha Noi";
+            }
+            else if (locationInput == 2)
+            {
+                location = "Sai Gon";
+            }
+            else if (locationInput == 3)
+            {
+                location = "Hue";
+            }
+            cout << endl;
+            this->house.location = location;
+        }
+        else if (userInput == 2)
+        {
+            string description;
+            cout << "Enter the new description: ";
+            getline(cin >> ws, description);
+            this->house.description = description;
+        }
     }
 
     void listHouse()
@@ -202,6 +204,70 @@ public:
 
     void viewAvailableHouse()
     {
+    }
+
+    void viewMyHouseInfo()
+    {
+        if (!this->haveHouse())
+        {
+            cout << "You have not added a house yet, try adding one" << endl;
+            return;
+        }
+        cout << "Location: " << this->house.location << endl;
+        cout << "Description: " << this->house.description << endl
+             << endl;
+    }
+    void memberMenu()
+    {
+        while (true)
+        {
+            cout << "1: List/ Unlist your house" << endl;
+            cout << "2: Search for houses" << endl;
+            cout << "3: View your house info" << endl;
+            if (!this->haveHouse())
+            {
+                cout << "4: Add your house" << endl;
+            }
+            else
+            {
+                cout << "4: Update your house info" << endl;
+            }
+            cout << "0: Exit" << endl;
+            cout << "Enter your choice: ";
+            int userInput;
+            cin >> userInput;
+            cout << endl;
+            if (userInput == 0)
+            {
+                return;
+            }
+            else if (userInput == 1)
+            {
+                if (this->house.isListed)
+                {
+                    this->unlistHouse();
+                }
+                else
+                {
+                    this->listHouse();
+                }
+            }
+            else if (userInput == 3)
+            {
+                this->viewMyHouseInfo();
+            }
+            else if (userInput == 4)
+            {
+                if (!this->haveHouse())
+                {
+                    this->addHouse();
+                }
+                else
+                {
+                    this->updateHouse();
+                }
+            }
+        }
     }
 
     friend class System;

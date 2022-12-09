@@ -149,18 +149,20 @@ public:
         }
     }
 
-    Member findMember(string username, string password)
+    int findMemberIndex(string username, string password)
     {
-        for (Member member : allMembers)
+        for (int i = 0; i < this->allMembers.size(); i++)
         {
-            if (member.userName == username && member.password == password)
+            Member currentMember = this->allMembers.at(i);
+            if (currentMember.userName == username && currentMember.password == password)
             {
-                return member;
+                return i;
             }
         }
 
-        cout << "Incorrect username or password, try again" << endl;
-        return Member();
+        cout << "Incorrect username or password, try again" << endl
+             << endl;
+        return -1;
     }
 };
 
@@ -222,10 +224,10 @@ int main()
             cout << "Enter your password: ";
             getline(cin >> ws, password);
             cout << endl;
-            Member existedMember = app.findMember(userName, password);
-            if (existedMember.verifyUser())
+            int existedMemberIndex = app.findMemberIndex(userName, password);
+            if (existedMemberIndex >= 0)
             {
-                existedMember.memberMenu();
+                app.allMembers.at(existedMemberIndex).memberMenu();
             }
         }
 
