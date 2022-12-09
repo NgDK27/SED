@@ -3,6 +3,7 @@
         "*.ejs": "html",
         "ostream": "cpp",
         "iosfwd": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "string_view": "cpp"
     }
 }

@@ -20,6 +20,7 @@ public:
         string password;
         string location;
         string description;
+        int consumingPoints;
         cout << "Enter your username: ";
         getline(cin >> ws, userName);
         cout << endl;
@@ -33,9 +34,9 @@ public:
         getline(cin >> ws, phoneNumber);
         cout << endl;
         cout << "Do you have a house to exchange (Y/N) ? ";
-        cout << endl;
         char userInput;
         cin >> userInput;
+        cout << endl;
         if (userInput == 'Y')
         {
             cout << "1: Ha Noi   2: Sai Gon   3: Hue" << endl;
@@ -55,22 +56,75 @@ public:
                 location = "Hue";
             }
             cout << endl;
+
             cout << "Enter the description of your house: ";
             getline(cin >> ws, description);
             cout << endl;
+
+            cout << "Set consuming points for your house: ";
+            cin >> consumingPoints;
         }
 
-        Member newMemeber(userName, fullName, password, phoneNumber, 500, House(location, description));
+        Member newMemeber(userName, fullName, password, phoneNumber, 500, House(location, description, consumingPoints));
         this->allMembers.push_back(newMemeber);
         cout << "Successfully register a member ( " << userName << " )" << endl;
         cout << endl;
     }
-    void readData() {}
+
+    vector<string> extractDataByLine(string line)
+    {
+        vector<string> data;
+        string field = "";
+        line += ",";
+        for (char ch : line)
+        {
+            if (ch == ',')
+            {
+                data.push_back(field);
+                field = "";
+                continue;
+            }
+            field += ch;
+        }
+        return data;
+    }
+
+    void readData()
+    {
+        // Read user and their house data
+        fstream fs;
+        fs.open("./Data/user.txt", ios::in);
+        if (fs.is_open())
+        {
+            string line;
+            while (getline(fs, line))
+            {
+                vector<string> extractedData = extractDataByLine(line);
+                string username = extractedData.at(0);
+                string fullname = extractedData.at(1);
+                string password = extractedData.at(2);
+                string phoneNumber = extractedData.at(3);
+                int creditPoints = stoi(extractedData.at(4));
+                string location = extractedData.at(5);
+                string description = extractedData.at(6);
+                bool isListed = stoi(extractedData.at(7));
+                string listedStart = extractedData.at(8);
+                string listedEnd = extractedData.at(9);
+                string occupiedStart = extractedData.at(10);
+                string occupiedEnd = extractedData.at(11);
+                double requiredRating = stod(extractedData.at(12));
+                int consumingPoint = stoi(extractedData.at(13));
+                Member member(username, fullname, password, phoneNumber, creditPoints, House(location, description, isListed, listedStart, listedEnd, occupiedStart, occupiedEnd, requiredRating, consumingPoint));
+                this->allMembers.push_back(member);
+            }
+        }
+    }
+
     void saveData()
     {
         // Save userData
         fstream fs;
-        fs.open("./Data/user.txt", ios::app);
+        fs.open("./Data/user.txt", ios::out);
         if (fs.is_open())
         {
             for (Member member : allMembers)
@@ -80,11 +134,40 @@ public:
         }
         fs.close();
     }
+
+    void viewHousesForNonMember()
+    {
+        for (Member member : allMembers)
+        {
+            if (member.house.location.length() == 0)
+            {
+                continue;
+            }
+            printf("%s have a house in %s \n", member.fullName.c_str(), member.house.location.c_str());
+            cout << "Description: " << member.house.description << endl;
+            cout << endl;
+        }
+    }
+
+    Member findMember(string username, string password)
+    {
+        for (Member member : allMembers)
+        {
+            if (member.userName == username && member.password == password)
+            {
+                return member;
+            }
+        }
+
+        cout << "Incorrect username or password, try again" << endl;
+        return Member();
+    }
 };
 
 int main()
 {
     System app;
+    app.readData();
     cout << "EEET2482/COSC2082 ASSIGNMENT" << endl;
     cout << "VACATION HOUSE EXCHANGE APPLICATION" << endl
          << endl;
@@ -98,7 +181,7 @@ int main()
     while (true)
     {
 
-        cout << "Use the app as 1. Guest   2. Member   3. Admin   0. Quit" << endl
+        cout << "Use the app as 1. Guest   2. Member   3. Admin   0. Quit (Must use this for the program to update data)" << endl
              << endl;
         cout << "Enter your choice: ";
         int userInput;
@@ -109,7 +192,7 @@ int main()
             while (true)
             {
                 cout << "1: Register" << endl;
-                cout << "2: View all houses" << endl;
+                cout << "2: View houses" << endl;
                 cout << "0: Back" << endl
                      << endl;
                 cout << "Enter your choice: ";
@@ -123,6 +206,10 @@ int main()
                 {
                     app.registerNewMember();
                 }
+                else if (userInput == 2)
+                {
+                    app.viewHousesForNonMember();
+                }
             }
         }
 
@@ -134,6 +221,12 @@ int main()
             getline(cin >> ws, userName);
             cout << "Enter your password: ";
             getline(cin >> ws, password);
+            cout << endl;
+            Member existedMember = app.findMember(userName, password);
+            if (existedMember.verifyUser())
+            {
+                existedMember.memberMenu();
+            }
         }
 
         else if (userInput == 3)
