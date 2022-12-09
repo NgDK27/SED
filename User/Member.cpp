@@ -3,12 +3,14 @@
 #include <ctime>
 #include "../House/House.cpp"
 
+using namespace std;
+
 class Member
 {
 private:
-    std::string userName;
-    std::string fullName;
-    std::string phoneNumber;
+    string userName;
+    string fullName;
+    string phoneNumber;
     int creditPoints;
     double ocupierRatingScores;
     House house;
@@ -16,7 +18,7 @@ private:
 public:
     Member() {}
 
-    Member(std::string userName, std::string fullName, std::string phoneNumber, int creditPoints, double ocupierRatingScores, House house)
+    Member(string userName, string fullName, string phoneNumber, int creditPoints, double ocupierRatingScores, House house)
     {
         this->userName = userName;
         this->fullName = fullName;
@@ -26,19 +28,34 @@ public:
         this->house = house;
     }
 
+    void memberMenu()
+    {
+        while (true)
+        {
+            cout << "0: Exit" << endl;
+            cout << "Enter your choice: ";
+            int userInput;
+            cin >> userInput;
+            if (userInput == 0)
+            {
+                return;
+            }
+        }
+    }
+
     void listHouse()
     {
-        std::string startDate;
-        std::string endDate;
-        std::cout << "Please enter the start date of the listing (DD/MM/YY): ";
-        std::getline(std::cin >> std::ws, startDate);
-        std::cout << "Please enter the end date of the listing (DD/MM/YY): ";
-        std::getline(std::cin >> std::ws, endDate);
+        string startDate;
+        string endDate;
+        cout << "Please enter the start date of the listing (DD/MM/YY): ";
+        getline(cin >> ws, startDate);
+        cout << "Please enter the end date of the listing (DD/MM/YY): ";
+        getline(cin >> ws, endDate);
         this->house.listedStart = startDate;
         this->house.listedEnd = endDate;
-        std::cout << "Do you want to set the minimum required occupier rating (Y/N) ? ";
+        cout << "Do you want to set the minimum required occupier rating (Y/N) ? ";
         char userInput;
-        std::cin >> userInput;
+        cin >> userInput;
         this->house.isListed = true;
         if (userInput == 'N')
         {
@@ -46,16 +63,16 @@ public:
         }
         else
         {
-            std::cout << "Please enter the minimum required occupier rating: ";
+            cout << "Please enter the minimum required occupier rating: ";
             double requiredRating;
-            std::cin >> requiredRating;
+            cin >> requiredRating;
             this->house.requiredRating = requiredRating;
         }
-        std::cout << std::endl;
-        std::cout << "Successfully list your house during: " << this->house.listedStart << " - " << this->house.listedEnd << std::endl;
+        cout << endl;
+        cout << "Successfully list your house during: " << this->house.listedStart << " - " << this->house.listedEnd << endl;
         if (userInput == 'Y')
         {
-            std::cout << "With the the minimum required occupier rating: " << this->house.requiredRating << std::endl;
+            cout << "With the the minimum required occupier rating: " << this->house.requiredRating << endl;
         }
     }
 
@@ -63,18 +80,22 @@ public:
     {
         if (this->house.isListed)
         {
-            std::cout << "Are you sure to unlist your house during " << this->house.listedStart << " - " << this->house.listedEnd << " (Y/N) ? ";
+            cout << "Are you sure to unlist your house during " << this->house.listedStart << " - " << this->house.listedEnd << " (Y/N) ? ";
             char userInput;
-            std::cin >> userInput;
+            cin >> userInput;
             if (userInput == 'Y')
             {
                 this->house.listedStart = "";
                 this->house.listedEnd = "";
                 this->house.isListed = false;
-                std::cout << "Successfully unlisted your house" << std::endl;
+                cout << "Successfully unlisted your house" << endl;
             }
             return;
         }
-        std::cout << "Your house has not been listed to be unlisted" << std::endl;
+        cout << "Your house has not been listed to be unlisted" << endl;
+    }
+
+    void viewAvailableHouse()
+    {
     }
 };

@@ -1,48 +1,92 @@
 #include <iostream>
+#include <vector>
 #include "./User/Member.cpp"
+
+using namespace std;
+class System
+{
+public:
+    vector<Member> allMembers;
+    System() {}
+    void registerNewMember()
+    {
+        string userName;
+        string fullName;
+        string password;
+        string location;
+        cout << "Enter your username: ";
+    }
+    void readData() {}
+};
 
 int main()
 {
-    std::cout << "EEET2482/COSC2082 ASSIGNMENT" << std::endl;
-    std::cout << "VACATION HOUSE EXCHANGE APPLICATION" << std::endl
-              << std::endl;
-    std::cout << "Instructors: Mr. Linh Tran & Phong Ngo" << std::endl;
-    std::cout << "Group: Deo Nho" << std::endl;
-    std::cout << "sXXXXXXX, Student Name" << std::endl;
-    std::cout << "sXXXXXXX, Student Name" << std::endl;
-    std::cout << "sXXXXXXX, Student Name" << std::endl;
-    std::cout << "sXXXXXXX, Student Name" << std::endl
-              << std::endl;
+    System app;
+    cout << "EEET2482/COSC2082 ASSIGNMENT" << endl;
+    cout << "VACATION HOUSE EXCHANGE APPLICATION" << endl
+         << endl;
+    cout << "Instructors: Mr. Linh Tran & Phong Ngo" << endl;
+    cout << "Group: Deo Nho" << endl;
+    cout << "sXXXXXXX, Student Name" << endl;
+    cout << "sXXXXXXX, Student Name" << endl;
+    cout << "sXXXXXXX, Student Name" << endl;
+    cout << "sXXXXXXX, Student Name" << endl;
+    cout << endl;
     while (true)
     {
-        std::cout << "Use the app as 1. Guest   2. Member   3. Admin   0. Quit" << std::endl;
-        std::cout << "Enter your choice: ";
+
+        cout << "Use the app as 1. Guest   2. Member   3. Admin   0. Quit" << endl
+             << endl;
+        cout << "Enter your choice: ";
         int userInput;
-        std::cin >> userInput;
+        cin >> userInput;
+        cout << endl;
         if (userInput == 1)
         {
-            std::cout << "Guest stuff" << std::endl;
+            while (true)
+            {
+                cout << "1: Register" << endl;
+                cout << "2: View all houses" << endl;
+                cout << "0: Back" << endl
+                     << endl;
+                cout << "Enter your choice: ";
+                cin >> userInput;
+                cout << endl;
+                if (userInput == 0)
+                {
+                    break;
+                }
+                else if (userInput == 1)
+                {
+                    app.registerNewMember();
+                }
+            }
         }
 
         else if (userInput == 2)
         {
-            std::cout << "Member stuff" << std::endl;
+            string userName;
+            string password;
+            cout << "Enter your username: ";
+            getline(cin >> ws, userName);
+            cout << "Enter your password: ";
+            getline(cin >> ws, password);
         }
 
         else if (userInput == 3)
         {
-            std::cout << "Admin stuff" << std::endl;
+            cout << "Admin stuff" << endl;
         }
 
         else if (userInput == 0)
         {
-            std::cout << "Goodbye" << std::endl;
+            cout << "Goodbye" << endl;
             return -1;
         }
 
         else
         {
-            std::cout << "Invalid input, try one of the above" << std::endl;
+            cout << "Invalid input, try one of the above" << endl;
         }
     }
 }

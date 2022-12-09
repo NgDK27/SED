@@ -1,23 +1,25 @@
 #include <iostream>
+
+using namespace std;
 class House
 {
 private:
-    std::string location;
-    std::string description;
-    double houseRatingScores;
-    std::string listedStart;
-    std::string listedEnd;
+    string location;
+    string description;
+    string listedStart;
+    string listedEnd;
     bool isListed = false;
     double requiredRating;
     int cosumingPoints;
+    vector<int> scores;
+    vector<string> comments;
 
 public:
     House() {}
-    House(std::string location, std::string description, double houseRatingScores)
+    House(string location, string description)
     {
         this->location = location;
         this->description = description;
-        this->houseRatingScores = houseRatingScores;
     }
     friend class Member;
 };
