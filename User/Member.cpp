@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <vector>
+#include <fstream>
 #include "../House/House.cpp"
 
 using namespace std;
@@ -10,22 +12,28 @@ class Member
 private:
     string userName;
     string fullName;
+    string password;
     string phoneNumber;
     int creditPoints;
-    double ocupierRatingScores;
+    vector<int> scores;
     House house;
 
 public:
     Member() {}
 
-    Member(string userName, string fullName, string phoneNumber, int creditPoints, double ocupierRatingScores, House house)
+    Member(string userName, string fullName, string password, string phoneNumber, int creditPoints, House house)
     {
         this->userName = userName;
         this->fullName = fullName;
+        this->password = password;
         this->phoneNumber = phoneNumber;
         this->creditPoints = creditPoints;
-        this->ocupierRatingScores = ocupierRatingScores;
         this->house = house;
+    }
+
+    string toString()
+    {
+        return this->userName + "," + this->fullName + "," + this->password + "," + this->phoneNumber + "," + to_string(this->creditPoints) + "," + this->house.location + "," + this->house.description + "," + to_string(this->house.isListed) + "," + this->house.listedStart + "," + this->house.listedEnd + "," + to_string(this->house.requiredRating) + "," + to_string(this->house.cosumingPoints);
     }
 
     void memberMenu()
