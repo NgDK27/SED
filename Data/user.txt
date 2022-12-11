@@ -2,3 +2,4 @@ vu113,Dao Anh Vu,0123456,0352083430,500,Ha Noi,This house is located in HBT and 
 deptraicogisai,Le Van Luyen,1214,01234568923,500,Sai Gon,This house is old but still good to use,0,,,,,0.000000,100
 blueeyes123,Paul,jetdragon,0422358483,500,Hue,This house is in great condition for traveller,0,22/12/2022,23/12/2022,,,-10.000000,50
 homeless,Ngo Ba Kha,ratlavui,078237382,500,Sai Gon,Just bought this property and it is brand new,0,,,,,0.000000,200
+DK,Dinh Khai,dinhkhai,0944345345,500,Ha Noi,Wack,0,,,,,0.000000,250

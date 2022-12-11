@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <string>
 #include "./User/Member.cpp"
 #include "./Rating/Rating.cpp"
 

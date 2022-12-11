@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <vector>
+#include <string>
 #include <fstream>
 #include "../House/House.cpp"
 
