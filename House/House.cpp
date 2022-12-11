@@ -36,7 +36,7 @@ public:
     {
         this->location = location;
         this->description = description;
-        this->isListed = false;
+        this->isListed = isListed;
         this->listedStart = listedStart;
         this->listedEnd = listedEnd;
         this->occupiedStart = occupiedStart;

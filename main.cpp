@@ -4,6 +4,7 @@
 #include "./Rating/Rating.cpp"
 
 using namespace std;
+
 class System
 {
 public:
@@ -107,7 +108,12 @@ public:
                 int creditPoints = stoi(extractedData.at(4));
                 string location = extractedData.at(5);
                 string description = extractedData.at(6);
-                bool isListed = stoi(extractedData.at(7));
+                int isListedInt = stoi(extractedData.at(7));
+                bool isListed = false;
+                if (isListedInt == 1)
+                {
+                    isListed = true;
+                }
                 string listedStart = extractedData.at(8);
                 string listedEnd = extractedData.at(9);
                 string occupiedStart = extractedData.at(10);
@@ -149,21 +155,23 @@ public:
         }
     }
 
-    int findMemberIndex(string username, string password)
+    int findMemberIndex(string username)
     {
         for (int i = 0; i < this->allMembers.size(); i++)
         {
             Member currentMember = this->allMembers.at(i);
-            if (currentMember.userName == username && currentMember.password == password)
+            if (currentMember.userName == username)
             {
                 return i;
             }
         }
 
-        cout << "Incorrect username or password, try again" << endl
+        cout << "Username not found" << endl
              << endl;
         return -1;
     }
+
+    friend class Member;
 };
 
 int main()
@@ -224,10 +232,14 @@ int main()
             cout << "Enter your password: ";
             getline(cin >> ws, password);
             cout << endl;
-            int existedMemberIndex = app.findMemberIndex(userName, password);
+            int existedMemberIndex = app.findMemberIndex(userName);
             if (existedMemberIndex >= 0)
             {
-                app.allMembers.at(existedMemberIndex).memberMenu();
+                if (app.allMembers.at(existedMemberIndex).verifyPassword(password))
+                {
+                    cout << "Welcome, " << app.allMembers.at(existedMemberIndex).getFullName() << endl;
+                    app.allMembers.at(existedMemberIndex).memberMenu(app.allMembers);
+                }
             }
         }
 

@@ -18,6 +18,8 @@ private:
     vector<int> scores;
     House house;
 
+    vector<Member> allMembers;
+
 public:
     Member() {}
 
@@ -36,12 +38,19 @@ public:
         return this->userName + "," + this->fullName + "," + this->password + "," + this->phoneNumber + "," + to_string(this->creditPoints) + "," + this->house.location + "," + this->house.description + "," + to_string(this->house.isListed) + "," + this->house.listedStart + "," + this->house.listedEnd + "," + this->house.occupiedStart + "," + this->house.occupiedEnd + "," + to_string(this->house.requiredRating) + "," + to_string(this->house.cosumingPoints);
     }
 
-    bool verifyUser()
+    string getFullName()
     {
-        if (this->fullName.length() > 0)
+        return this->fullName;
+    }
+
+    bool verifyPassword(string password)
+    {
+        if (password == this->password)
         {
             return true;
         }
+        cout << "Incorrect password, try again" << endl
+             << endl;
         return false;
     }
 
@@ -202,10 +211,6 @@ public:
         cout << endl;
     }
 
-    void viewAvailableHouse()
-    {
-    }
-
     void viewMyHouseInfo()
     {
         if (!this->haveHouse())
@@ -214,15 +219,82 @@ public:
             return;
         }
         cout << "Location: " << this->house.location << endl;
-        cout << "Description: " << this->house.description << endl
+        cout << "Description: " << this->house.description << endl;
+        cout << "Available time: ";
+        if (this->house.isListed)
+        {
+            cout << this->house.listedStart << " - " << this->house.listedEnd;
+        }
+        else
+        {
+            cout << "None";
+        }
+        cout << endl
              << endl;
     }
-    void memberMenu()
+
+    void viewMyInfo()
     {
+        cout << endl;
+        cout << "Name: " << this->fullName << endl;
+        cout << "Phone number: " << this->phoneNumber << endl;
+        cout << "Credit points: " << this->creditPoints << endl;
+        cout << "Location: " << this->house.location << endl;
+        cout << endl;
+    }
+
+    void searchForSuitableHouses()
+    {
+        string location;
+        cout << "1: Ha Noi   2: Sai Gon   3: Hue" << endl;
+        cout << "Enter the location you want to search: ";
+        int locationInput;
+        cin >> locationInput;
+        if (locationInput == 1)
+        {
+            location = "Ha Noi";
+        }
+        else if (locationInput == 2)
+        {
+            location = "Sai Gon";
+        }
+        else if (locationInput == 3)
+        {
+            location = "Hue";
+        }
+
+        cout << endl;
+        bool found = false;
+        for (Member member : allMembers)
+        {
+
+            if (member.userName == this->userName)
+            {
+                continue;
+            }
+            if (member.house.location == location && member.house.isListed)
+            {
+                printf("%s have a house in %s \n", member.fullName.c_str(), member.house.location.c_str());
+                cout << "Description: " << member.house.description << endl;
+                printf("Available time range: %s - %s", member.house.listedStart.c_str(), member.house.listedEnd.c_str());
+                cout << endl;
+                found = true;
+            }
+        }
+        if (!found)
+        {
+            cout << "There is no house available for your criteria" << endl;
+        }
+        cout << endl;
+    }
+
+    void memberMenu(vector<Member> &allMembers)
+    {
+        this->allMembers = allMembers;
         while (true)
         {
             cout << "1: List/ Unlist your house" << endl;
-            cout << "2: Search for houses" << endl;
+            cout << "2: View your info" << endl;
             cout << "3: View your house info" << endl;
             if (!this->haveHouse())
             {
@@ -232,6 +304,7 @@ public:
             {
                 cout << "4: Update your house info" << endl;
             }
+            cout << "5: Search for houses" << endl;
             cout << "0: Exit" << endl;
             cout << "Enter your choice: ";
             int userInput;
@@ -252,6 +325,10 @@ public:
                     this->listHouse();
                 }
             }
+            else if (userInput == 2)
+            {
+                this->viewMyInfo();
+            }
             else if (userInput == 3)
             {
                 this->viewMyHouseInfo();
@@ -266,6 +343,10 @@ public:
                 {
                     this->updateHouse();
                 }
+            }
+            else if (userInput == 5)
+            {
+                this->searchForSuitableHouses();
             }
         }
     }
