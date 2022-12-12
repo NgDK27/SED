@@ -1,9 +1,9 @@
 #include <iostream>
-#include <cstdlib>
-#include <ctime>
+// #include <cstdlib>
 #include <vector>
 #include <string>
 #include <fstream>
+#include <sstream>
 #include "../House/House.cpp"
 
 using namespace std;
@@ -63,6 +63,35 @@ public:
         }
 
         return true;
+    }
+
+    int checkDifTime(string time1, string time2)
+    {
+        stringstream ss1(time1);
+        string d1, m1, y1;
+
+        getline(ss1, d1, '/');
+        getline(ss1, m1, '/');
+        getline(ss1, y1, '/');
+
+        stringstream ss2(time2);
+        string d2, m2, y2;
+
+        getline(ss2, d2, '/');
+        getline(ss2, m2, '/');
+        getline(ss2, y2, '/');
+
+        // cout << d << "/" << mm << "/" << y << endl;
+        struct tm a = {0, 0, 0, stoi(d1), stoi(m1) - 1, stoi(y1) - 1900}; /* June 24, 2004 */
+        struct tm b = {0, 0, 0, stoi(d2), stoi(m2) - 1, stoi(y2) - 1900}; /* July 5, 2004 */
+        time_t x = mktime(&a);
+        time_t y = mktime(&b);
+        if (x != (time_t)(-1) && y != (time_t)(-1))
+        {
+            double difference = difftime(y, x) / (60 * 60 * 24);
+            return difference;
+        }
+        return 0;
     }
 
     void addHouse()
@@ -224,7 +253,8 @@ public:
         cout << "Available time: ";
         if (this->house.isListed)
         {
-            cout << this->house.listedStart << " - " << this->house.listedEnd;
+            cout << this->house.listedStart << " - " << this->house.listedEnd << endl;
+            cout << "Days available: " << this->checkDifTime(this->house.listedStart, this->house.listedEnd);
         }
         else
         {
