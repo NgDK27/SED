@@ -173,6 +173,7 @@ public:
     }
 
     friend class Member;
+    friend class Time;
 };
 
 int main()
