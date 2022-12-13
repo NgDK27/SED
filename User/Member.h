@@ -45,6 +45,20 @@ public:
         return this->userName + "," + this->fullName + "," + this->password + "," + this->phoneNumber + "," + to_string(this->creditPoints) + "," + this->house.location + "," + this->house.description + "," + to_string(this->house.isListed) + "," + this->house.listedStart + "," + this->house.listedEnd + "," + this->house.occupiedStart + "," + this->house.occupiedEnd + "," + this->house.occupierUsername + "," + to_string(this->house.requiredRating) + "," + to_string(this->house.cosumingPoints) + "," + to_string(this->ratingScore) + "," + to_string(this->numberOfTimeRated) + "," + to_string(this->house.ratingScore) + "," + to_string(this->house.numberOfTimeRated);
     }
 
+    bool memberExist(string username)
+    {
+        bool result = false;
+        for (Member member : *this->allMembers)
+        {
+            if (member.userName == userName)
+            {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
+
     string getFullName()
     {
         return this->fullName;
@@ -324,6 +338,15 @@ public:
                 cout << "Description: " << member.house.description << endl;
                 printf("Available time range: %s - %s \n", member.house.listedStart.c_str(), member.house.listedEnd.c_str());
                 cout << "Days available: " << time.checkDifTime(member.house.listedStart, member.house.listedEnd) << endl;
+                cout << "House rating score: ";
+                if (member.house.numberOfTimeRated == 0)
+                {
+                    cout << "this house has never been rated" << endl;
+                }
+                else
+                {
+                    cout << member.house.ratingScore << endl;
+                }
                 cout << "His/her username: " << member.userName << endl;
                 cout << endl;
                 found = true;
@@ -340,7 +363,7 @@ public:
     {
         cout << "To make a request, you must know the username of the owner, your start date and end date" << endl;
         cout << "You should also make sure that you have verified the information of the owner (Location or maybe check their review)" << endl;
-        cout << "If you do not have the required information, it is recommended that you go back and select Search for houses" << endl;
+        cout << "If you do not have the required information, it is recommended that you go back and select Search for houses (6)" << endl;
         cout << endl;
         cout << "1: I would like to proceed" << endl;
         cout << "2: Go back" << endl;
@@ -364,6 +387,27 @@ public:
         cout << "Username of the owner: ";
         getline(cin >> ws, ownerUsername);
         cout << endl;
+
+        bool found = memberExist(ownerUsername);
+        if (!found)
+        {
+            cout << "User not found, please check your input again !" << endl
+                 << endl;
+            return;
+        }
+
+        // Check if request already been made
+
+        for (Request request : *allRequests)
+        {
+            if (request.usernameOfOccupier == this->userName && request.usernameOfOwner == ownerUsername)
+            {
+                cout << "You already made a request to this owner !!!" << endl
+                     << endl;
+                return;
+            }
+        }
+
         cout << "Start date (DD/MM/YYYY): " << endl;
         getline(cin >> ws, startDate);
         cout << endl;
@@ -379,12 +423,55 @@ public:
     {
         for (Request request : *this->allRequests)
         {
-            cout << "Hello" << endl;
             if (request.usernameOfOwner == this->userName)
             {
-                cout << "Request from: " << request.usernameOfOccupier << " " << request.requestStartDate << " - " << request.requestEndDate << endl;
+                cout << "Request from: " << request.usernameOfOccupier << endl;
+                cout << "Date: " << request.requestStartDate << " - " << request.requestEndDate << endl;
+            }
+            cout << endl;
+        }
+    }
+
+    void acceptRequest()
+    {
+        cout << "To accept a request, you must enter the username of the one you want to accept" << endl;
+        cout << "If you do not have it, please check your incoming request by using (8)" << endl
+             << endl;
+        cout << "1: I would like to proceed (reject all others)" << endl;
+        cout << "2: Go back" << endl
+             << endl;
+        cout << "Your choice: ";
+        int userInput;
+        cin >> userInput;
+        cout << endl;
+        if (userInput == 2)
+        {
+            return;
+        }
+        if (userInput != 1)
+        {
+            cout << "Invalid input, please check again" << endl
+                 << endl;
+        }
+
+        string usernameOfRequest;
+        cout << "Enter the username of whom you want to accept: ";
+        getline(cin >> ws, usernameOfRequest);
+
+        for (Request request : *allRequests)
+        {
+            if (request.usernameOfOccupier == usernameOfRequest && request.usernameOfOwner == this->userName)
+            {
+                this->house.occupierUsername = usernameOfRequest;
+                this->house.occupiedStart = request.requestStartDate;
+                this->house.occupiedEnd = request.requestEndDate;
+                cout << "Successfully accept request of: " << usernameOfRequest << endl
+                     << endl;
+                return;
             }
         }
+        cout << "No request of: " << usernameOfRequest << " found" << endl;
+        cout << "Please check again" << endl;
     }
 
     void memberMenu(vector<Member> &allMembers, vector<Request> &allRequests)
@@ -408,6 +495,7 @@ public:
             cout << "6: Search for houses" << endl;
             cout << "7: Request for a house" << endl;
             cout << "8: Check request of your house" << endl;
+            cout << "9: Accept a request" << endl;
             cout << "0: Exit" << endl;
             cout << "Enter your choice: ";
             int userInput;
@@ -415,6 +503,7 @@ public:
             cout << endl;
             if (userInput == 0)
             {
+                cin.clear();
                 return;
             }
             else if (userInput == 1)
@@ -463,10 +552,12 @@ public:
             {
                 this->checkForMyRequest();
             }
+            else if (userInput == 9)
+            {
+                this->acceptRequest();
+            }
         }
     }
-
     friend class System;
 };
-
 #endif

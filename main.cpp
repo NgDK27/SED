@@ -166,7 +166,16 @@ public:
         {
             for (Member member : this->allMembers)
             {
-                fs << member.toString() << endl;
+                fs << member.toString();
+                for (Request request : this->allRequests)
+                {
+                    if (request.usernameOfOwner == member.userName)
+                    {
+                        string eachRequest = ",request: " + request.usernameOfOccupier + ":" + request.requestStartDate + ":" + request.requestEndDate;
+                        fs << eachRequest;
+                    }
+                }
+                fs << endl;
             }
         }
         fs.close();
@@ -210,10 +219,6 @@ int main()
 {
     System app;
     app.readData();
-    for (Request request : app.allRequests)
-    {
-        cout << request.toString() << endl;
-    }
     cout << "EEET2482/COSC2082 ASSIGNMENT" << endl;
     cout << "VACATION HOUSE EXCHANGE APPLICATION" << endl
          << endl;
