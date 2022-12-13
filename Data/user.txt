@@ -1,4 +1,4 @@
 vu113,Dao Anh Vu,0123456,057482932,500,Ha Noi,This house is very nice,1,22/12/2022,25/12/2022,,,,4.000000,100,0.000000,0,0.000000,0
-deptraicogisai,Le Van Luyen,1214,0489283922,500,Sai Gon,House is a little old but still good to use,0,,,,,,0.000000,20,0.000000,0,0.000000,0
+deptraicogisai,Le Van Luyen,1214,0489283922,500,Sai Gon,House is a little old but still good to use,1,05/01/2022,07/01/2022,,,,-10.000000,20,5.000000,0,0.000000,0
 homeless,Ngo Ba Kha,ratlavui,078237382,500,Sai Gon,Just bought my first property. Brand new,0,,,,,,0.000000,90,0.000000,0,0.000000,0
 DK,Dinh Khai,dinhkhai,0944345345,500,Ha Noi,Wack,0,,,,,,0.000000,250,0.000000,0,0.000000,0

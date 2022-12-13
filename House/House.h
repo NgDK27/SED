@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 
+#ifndef HOUSE
+#define HOUSE
 using namespace std;
 class House
 {
@@ -54,3 +56,5 @@ public:
     friend class Member;
     friend class System;
 };
+
+#endif

@@ -1,8 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include "./User/Member.cpp"
-#include "./Rating/Rating.cpp"
+#include "./User/Member.h"
+#include "./Request/Request.h"
 
 using namespace std;
 
@@ -10,7 +10,7 @@ class System
 {
 public:
     vector<Member> allMembers;
-    vector<Rating> allRating;
+    vector<Request> allRequests;
 
     System() {}
 
@@ -73,14 +73,14 @@ public:
         cout << endl;
     }
 
-    vector<string> extractDataByLine(string line)
+    vector<string> extractDataByLine(string line, char specifer = ',')
     {
         vector<string> data;
         string field = "";
-        line += ",";
+        line += specifer;
         for (char ch : line)
         {
-            if (ch == ',')
+            if (ch == specifer)
             {
                 data.push_back(field);
                 field = "";
@@ -131,6 +131,27 @@ public:
                 double ratingScoreHouse = stod(extractedData.at(17));
                 int numberOfRatedTimeHouse = stoi(extractedData.at(18));
                 Member member(username, fullname, password, phoneNumber, creditPoints, numberOfRatedTimeOwner, ratingScoreOwner, House(location, description, isListed, listedStart, listedEnd, occupiedStart, occupiedEnd, occupierUsername, requiredRating, consumingPoint, numberOfRatedTimeHouse, ratingScoreHouse));
+                for (int i = 19; i < extractedData.size(); i++)
+                {
+                    string prefix = extractedData.at(i).substr(0, 7);
+                    if (prefix == "review:")
+                    {
+                        string comment = extractedData.at(i).substr(8, extractedData.at(i).length());
+                        member.house.comments.push_back(comment);
+                    }
+                    else
+                    {
+                        string prefix = extractedData.at(i).substr(0, 8);
+                        if (prefix == "request:")
+                        {
+                            string request = extractedData.at(i).substr(9, extractedData.at(i).length());
+                            vector<string> requestField = extractDataByLine(request, ':');
+                            Request newRequest(member.userName, requestField.at(0), requestField.at(1), requestField.at(2));
+                            this->allRequests.push_back(newRequest);
+                        }
+                    }
+                }
+
                 this->allMembers.push_back(member);
             }
         }
@@ -189,6 +210,10 @@ int main()
 {
     System app;
     app.readData();
+    for (Request request : app.allRequests)
+    {
+        cout << request.toString() << endl;
+    }
     cout << "EEET2482/COSC2082 ASSIGNMENT" << endl;
     cout << "VACATION HOUSE EXCHANGE APPLICATION" << endl
          << endl;
@@ -201,7 +226,6 @@ int main()
     cout << endl;
     while (true)
     {
-
         cout << "Use the app as 1. Guest   2. Member   3. Admin   0. Quit (Must use this for the program to update data)" << endl
              << endl;
         cout << "Enter your choice: ";
@@ -249,7 +273,8 @@ int main()
                 if (app.allMembers.at(existedMemberIndex).verifyPassword(password))
                 {
                     cout << "Welcome, " << app.allMembers.at(existedMemberIndex).getFullName() << endl;
-                    app.allMembers.at(existedMemberIndex).memberMenu(app.allMembers);
+                    app.allMembers.at(existedMemberIndex)
+                        .memberMenu(app.allMembers, app.allRequests);
                 }
             }
         }

@@ -2,9 +2,12 @@
 #include <vector>
 #include <string>
 #include <fstream>
-#include "../House/House.cpp"
-#include "../Utils/Time.cpp"
+#include "../House/House.h"
+#include "../Utils/Time.h"
+#include "../Request/Request.h"
 
+#ifndef MEMBER
+#define MEMBER
 using namespace std;
 
 class Member
@@ -19,7 +22,8 @@ private:
     double ratingScore;
     House house;
 
-    vector<Member> allMembers;
+    vector<Member> *allMembers;
+    vector<Request> *allRequests;
 
 public:
     Member() {}
@@ -222,6 +226,7 @@ public:
             cout << "You have not added a house yet, try adding one" << endl;
             return;
         }
+        cout << "YOUR HOUSE INFO" << endl;
         cout << "Location: " << this->house.location << endl;
         cout << "Description: " << this->house.description << endl;
         cout << "House rating score: " << this->house.ratingScore << " ";
@@ -249,7 +254,7 @@ public:
 
     void viewMyInfo()
     {
-        cout << endl;
+        cout << "YOUR INFO" << endl;
         cout << "Name: " << this->fullName << endl;
         cout << "Phone number: " << this->phoneNumber << endl;
         cout << "Credit points: " << this->creditPoints << endl;
@@ -263,6 +268,23 @@ public:
             cout << endl;
         }
         cout << "Location: " << this->house.location << endl;
+        cout << endl;
+    }
+
+    void viewCommentsOfMyHouse()
+    {
+        if (this->house.comments.size() == 0)
+        {
+            cout << "You have no reviews" << endl
+                 << endl;
+            return;
+        }
+        cout << "REVIEWS OF YOUR HOUSE: " << endl;
+        for (int i = 0; i < this->house.comments.size(); i++)
+        {
+            string currentComment = this->house.comments.at(i);
+            cout << currentComment << endl;
+        }
         cout << endl;
     }
 
@@ -289,47 +311,103 @@ public:
         cout << endl;
         bool found = false;
         Time time;
-        for (Member member : allMembers)
+        for (Member member : (*this->allMembers))
         {
 
             if (member.userName == this->userName)
             {
                 continue;
             }
-            if (member.house.location == location && member.house.isListed && this->ratingScore >= member.house.requiredRating)
+            if (member.house.location == location && member.house.isListed && (this->ratingScore >= member.house.requiredRating || this->numberOfTimeRated == 0))
             {
                 printf("%s have a house in %s \n", member.fullName.c_str(), member.house.location.c_str());
                 cout << "Description: " << member.house.description << endl;
                 printf("Available time range: %s - %s \n", member.house.listedStart.c_str(), member.house.listedEnd.c_str());
                 cout << "Days available: " << time.checkDifTime(member.house.listedStart, member.house.listedEnd) << endl;
+                cout << "His/her username: " << member.userName << endl;
                 cout << endl;
                 found = true;
             }
         }
         if (!found)
         {
-            cout << "There is no house available for your criteria" << endl;
+            cout << "There is no house available for your criteria" << endl
+                 << endl;
         }
-        cout << endl;
     }
 
-    void memberMenu(vector<Member> &allMembers)
+    void makeARequest()
     {
-        this->allMembers = allMembers;
+        cout << "To make a request, you must know the username of the owner, your start date and end date" << endl;
+        cout << "You should also make sure that you have verified the information of the owner (Location or maybe check their review)" << endl;
+        cout << "If you do not have the required information, it is recommended that you go back and select Search for houses" << endl;
+        cout << endl;
+        cout << "1: I would like to proceed" << endl;
+        cout << "2: Go back" << endl;
+        cout << endl;
+        cout << "Your choices: ";
+        int userInput;
+        cin >> userInput;
+        cout << endl;
+        if (userInput == 2)
+        {
+            return;
+        }
+        if (userInput != 1)
+        {
+            cout << "Invalid input, try again" << endl;
+            return;
+        }
+        string ownerUsername;
+        string startDate;
+        string endDate;
+        cout << "Username of the owner: ";
+        getline(cin >> ws, ownerUsername);
+        cout << endl;
+        cout << "Start date (DD/MM/YYYY): " << endl;
+        getline(cin >> ws, startDate);
+        cout << endl;
+        cout << "End date (DD/MM/YYYY): " << endl;
+        getline(cin >> ws, endDate);
+        cout << endl;
+        (*(this->allRequests)).push_back(Request(ownerUsername, this->userName, startDate, endDate));
+        cout << "Successfully make a request to " << ownerUsername << endl
+             << endl;
+    }
+
+    void checkForMyRequest()
+    {
+        for (Request request : *this->allRequests)
+        {
+            cout << "Hello" << endl;
+            if (request.usernameOfOwner == this->userName)
+            {
+                cout << "Request from: " << request.usernameOfOccupier << " " << request.requestStartDate << " - " << request.requestEndDate << endl;
+            }
+        }
+    }
+
+    void memberMenu(vector<Member> &allMembers, vector<Request> &allRequests)
+    {
+        this->allMembers = &allMembers;
+        this->allRequests = &allRequests;
         while (true)
         {
             cout << "1: List/ Unlist your house" << endl;
             cout << "2: View your info" << endl;
             cout << "3: View your house info" << endl;
+            cout << "4: View your house reviews" << endl;
             if (!this->haveHouse())
             {
-                cout << "4: Add your house" << endl;
+                cout << "5: Add your house" << endl;
             }
             else
             {
-                cout << "4: Update your house info" << endl;
+                cout << "5: Update your house info" << endl;
             }
-            cout << "5: Search for houses" << endl;
+            cout << "6: Search for houses" << endl;
+            cout << "7: Request for a house" << endl;
+            cout << "8: Check request of your house" << endl;
             cout << "0: Exit" << endl;
             cout << "Enter your choice: ";
             int userInput;
@@ -360,6 +438,10 @@ public:
             }
             else if (userInput == 4)
             {
+                this->viewCommentsOfMyHouse();
+            }
+            else if (userInput == 5)
+            {
                 if (!this->haveHouse())
                 {
                     this->addHouse();
@@ -369,12 +451,22 @@ public:
                     this->updateHouse();
                 }
             }
-            else if (userInput == 5)
+            else if (userInput == 6)
             {
                 this->searchForSuitableHouses();
+            }
+            else if (userInput == 7)
+            {
+                this->makeARequest();
+            }
+            else if (userInput == 8)
+            {
+                this->checkForMyRequest();
             }
         }
     }
 
     friend class System;
 };
+
+#endif
