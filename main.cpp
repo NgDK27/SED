@@ -134,7 +134,7 @@ public:
         fs.open("./Data/user.txt", ios::out);
         if (fs.is_open())
         {
-            for (Member member : allMembers)
+            for (Member member : this->allMembers)
             {
                 fs << member.toString() << endl;
             }
@@ -173,6 +173,7 @@ public:
     }
 
     friend class Member;
+    friend class Time;
 };
 
 int main()

@@ -1,10 +1,9 @@
 #include <iostream>
-#include <cstdlib>
-#include <ctime>
 #include <vector>
 #include <string>
 #include <fstream>
 #include "../House/House.cpp"
+#include "../Utils/Time.cpp"
 
 using namespace std;
 
@@ -214,6 +213,7 @@ public:
 
     void viewMyHouseInfo()
     {
+        Time time;
         if (!this->haveHouse())
         {
             cout << "You have not added a house yet, try adding one" << endl;
@@ -224,7 +224,9 @@ public:
         cout << "Available time: ";
         if (this->house.isListed)
         {
-            cout << this->house.listedStart << " - " << this->house.listedEnd;
+            cout << this->house.listedStart << " - " << this->house.listedEnd << endl;
+            cout << "Days available: " << time.checkDifTime(this->house.listedStart, this->house.listedEnd) << endl;
+            cout << time.toTime(this->house.listedStart);
         }
         else
         {
