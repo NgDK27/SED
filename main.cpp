@@ -67,7 +67,7 @@ public:
             cin >> consumingPoints;
         }
 
-        Member newMemeber(userName, fullName, password, phoneNumber, 500, House(location, description, consumingPoints));
+        Member newMemeber(userName, fullName, password, phoneNumber, 500, 0, 0, House(location, description, consumingPoints, 0, 0));
         this->allMembers.push_back(newMemeber);
         cout << "Successfully register a member ( " << userName << " )" << endl;
         cout << endl;
@@ -101,6 +101,10 @@ public:
             string line;
             while (getline(fs, line))
             {
+                if (line == "")
+                {
+                    break;
+                }
                 vector<string> extractedData = extractDataByLine(line);
                 string username = extractedData.at(0);
                 string fullname = extractedData.at(1);
@@ -119,9 +123,14 @@ public:
                 string listedEnd = extractedData.at(9);
                 string occupiedStart = extractedData.at(10);
                 string occupiedEnd = extractedData.at(11);
-                double requiredRating = stod(extractedData.at(12));
-                int consumingPoint = stoi(extractedData.at(13));
-                Member member(username, fullname, password, phoneNumber, creditPoints, House(location, description, isListed, listedStart, listedEnd, occupiedStart, occupiedEnd, requiredRating, consumingPoint));
+                string occupierUsername = extractedData.at(12);
+                double requiredRating = stod(extractedData.at(13));
+                int consumingPoint = stoi(extractedData.at(14));
+                double ratingScoreOwner = stod(extractedData.at(15));
+                int numberOfRatedTimeOwner = stoi(extractedData.at(16));
+                double ratingScoreHouse = stod(extractedData.at(17));
+                int numberOfRatedTimeHouse = stoi(extractedData.at(18));
+                Member member(username, fullname, password, phoneNumber, creditPoints, numberOfRatedTimeOwner, ratingScoreOwner, House(location, description, isListed, listedStart, listedEnd, occupiedStart, occupiedEnd, occupierUsername, requiredRating, consumingPoint, numberOfRatedTimeHouse, ratingScoreHouse));
                 this->allMembers.push_back(member);
             }
         }
@@ -134,7 +143,7 @@ public:
         fs.open("./Data/user.txt", ios::out);
         if (fs.is_open())
         {
-            for (Member member : allMembers)
+            for (Member member : this->allMembers)
             {
                 fs << member.toString() << endl;
             }
@@ -173,6 +182,7 @@ public:
     }
 
     friend class Member;
+    friend class Time;
 };
 
 int main()

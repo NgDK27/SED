@@ -1,10 +1,9 @@
 #include <iostream>
-#include <cstdlib>
-#include <ctime>
 #include <vector>
 #include <string>
 #include <fstream>
 #include "../House/House.cpp"
+#include "../Utils/Time.cpp"
 
 using namespace std;
 
@@ -16,7 +15,8 @@ private:
     string password;
     string phoneNumber;
     int creditPoints;
-    vector<int> scores;
+    int numberOfTimeRated;
+    double ratingScore;
     House house;
 
     vector<Member> allMembers;
@@ -24,19 +24,21 @@ private:
 public:
     Member() {}
 
-    Member(string userName, string fullName, string password, string phoneNumber, int creditPoints, House house)
+    Member(string userName, string fullName, string password, string phoneNumber, int creditPoints, int numberOfTimeRated, double ratingScore, House house)
     {
         this->userName = userName;
         this->fullName = fullName;
         this->password = password;
         this->phoneNumber = phoneNumber;
         this->creditPoints = creditPoints;
+        this->numberOfTimeRated = numberOfTimeRated;
+        this->ratingScore = ratingScore;
         this->house = house;
     }
 
     string toString()
     {
-        return this->userName + "," + this->fullName + "," + this->password + "," + this->phoneNumber + "," + to_string(this->creditPoints) + "," + this->house.location + "," + this->house.description + "," + to_string(this->house.isListed) + "," + this->house.listedStart + "," + this->house.listedEnd + "," + this->house.occupiedStart + "," + this->house.occupiedEnd + "," + to_string(this->house.requiredRating) + "," + to_string(this->house.cosumingPoints);
+        return this->userName + "," + this->fullName + "," + this->password + "," + this->phoneNumber + "," + to_string(this->creditPoints) + "," + this->house.location + "," + this->house.description + "," + to_string(this->house.isListed) + "," + this->house.listedStart + "," + this->house.listedEnd + "," + this->house.occupiedStart + "," + this->house.occupiedEnd + "," + this->house.occupierUsername + "," + to_string(this->house.requiredRating) + "," + to_string(this->house.cosumingPoints) + "," + to_string(this->ratingScore) + "," + to_string(this->numberOfTimeRated) + "," + to_string(this->house.ratingScore) + "," + to_string(this->house.numberOfTimeRated);
     }
 
     string getFullName()
@@ -214,6 +216,7 @@ public:
 
     void viewMyHouseInfo()
     {
+        Time time;
         if (!this->haveHouse())
         {
             cout << "You have not added a house yet, try adding one" << endl;
@@ -221,10 +224,20 @@ public:
         }
         cout << "Location: " << this->house.location << endl;
         cout << "Description: " << this->house.description << endl;
+        cout << "House rating score: " << this->house.ratingScore << " ";
+        if (this->numberOfTimeRated == 0)
+        {
+            cout << "(This is because you have not been rated yet, so don't worry)" << endl;
+        }
+        else
+        {
+            cout << endl;
+        }
         cout << "Available time: ";
         if (this->house.isListed)
         {
-            cout << this->house.listedStart << " - " << this->house.listedEnd;
+            cout << this->house.listedStart << " - " << this->house.listedEnd << endl;
+            cout << "Days available: " << time.checkDifTime(this->house.listedStart, this->house.listedEnd) << endl;
         }
         else
         {
@@ -240,6 +253,15 @@ public:
         cout << "Name: " << this->fullName << endl;
         cout << "Phone number: " << this->phoneNumber << endl;
         cout << "Credit points: " << this->creditPoints << endl;
+        cout << "Rating scores: " << this->ratingScore << " ";
+        if (this->numberOfTimeRated == 0)
+        {
+            cout << "(This is because you have not been rated yet, so don't worry)" << endl;
+        }
+        else
+        {
+            cout << endl;
+        }
         cout << "Location: " << this->house.location << endl;
         cout << endl;
     }
@@ -266,6 +288,7 @@ public:
 
         cout << endl;
         bool found = false;
+        Time time;
         for (Member member : allMembers)
         {
 
@@ -273,11 +296,12 @@ public:
             {
                 continue;
             }
-            if (member.house.location == location && member.house.isListed)
+            if (member.house.location == location && member.house.isListed && this->ratingScore >= member.house.requiredRating)
             {
                 printf("%s have a house in %s \n", member.fullName.c_str(), member.house.location.c_str());
                 cout << "Description: " << member.house.description << endl;
-                printf("Available time range: %s - %s", member.house.listedStart.c_str(), member.house.listedEnd.c_str());
+                printf("Available time range: %s - %s \n", member.house.listedStart.c_str(), member.house.listedEnd.c_str());
+                cout << "Days available: " << time.checkDifTime(member.house.listedStart, member.house.listedEnd) << endl;
                 cout << endl;
                 found = true;
             }

@@ -1,0 +1,19 @@
+1.username
+2.fullname
+3.password
+4.phone
+5.credit points
+6.Location
+7. House description
+8. isListed
+9. listedStart
+10. listedEnd
+11. Occupy start
+12. Occupy end
+13. Occupier username
+14. minimum rating to occupy
+15. consuming points
+16. owner rate
+17. number of time owner is rated
+18. house rate
+19. number of time house is rated

@@ -1,10 +1,16 @@
 {
-    "files.associations": {
-        "*.ejs": "html",
-        "ostream": "cpp",
-        "iosfwd": "cpp",
-        "vector": "cpp",
-        "string_view": "cpp",
-        "iostream": "cpp"
-    }
+  "files.associations": {
+    "*.ejs": "html",
+    "ostream": "cpp",
+    "iosfwd": "cpp",
+    "vector": "cpp",
+    "string_view": "cpp",
+    "iostream": "cpp",
+    "cstdlib": "cpp",
+    "ctime": "cpp",
+    "fstream": "cpp",
+    "string": "cpp",
+    "xstring": "cpp",
+    "sstream": "cpp"
+  }
 }
