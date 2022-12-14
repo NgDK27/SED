@@ -11,15 +11,17 @@ private:
     string requestStartDate;
     string requestEndDate;
     string status;
+    int consumingPointPerDay;
 
 public:
-    Request(string usernameOfOwner, string usernameOfOccupier, string requestStartDate, string requestEndDate, string status)
+    Request(string usernameOfOwner, string usernameOfOccupier, string requestStartDate, string requestEndDate, string status, int consumingPointPerDay)
     {
         this->usernameOfOwner = usernameOfOwner;
         this->usernameOfOccupier = usernameOfOccupier;
         this->requestStartDate = requestStartDate;
         this->requestEndDate = requestEndDate;
         this->status = status;
+        this->consumingPointPerDay = consumingPointPerDay;
     }
     string toString()
     {

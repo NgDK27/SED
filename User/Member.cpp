@@ -321,6 +321,15 @@ public:
         }
 
         cout << endl;
+
+        string startDate;
+        string endDate;
+        cout << "Start date (DD/MM/YYYY): " << endl;
+        getline(cin >> ws, startDate);
+        cout << endl;
+        cout << "End date (DD/MM/YYYY): " << endl;
+        getline(cin >> ws, endDate);
+        cout << endl;
         bool found = false;
         Time time;
         for (Member member : (*this->allMembers))
@@ -330,12 +339,13 @@ public:
             {
                 continue;
             }
-            if (member.house.location == location && member.house.isListed && (this->ratingScore >= member.house.requiredRating || this->numberOfTimeRated == 0))
+            if (member.house.location == location && member.house.isListed && (this->ratingScore >= member.house.requiredRating || this->numberOfTimeRated == 0) && (time.checkDifTime(startDate, member.house.listedStart) >= 0 && time.checkDifTime(endDate, member.house.listedEnd) <= 0) && (this->creditPoints >= time.checkDifTime(member.house.listedStart, member.house.listedEnd) * member.house.cosumingPoints))
             {
                 printf("%s have a house in %s \n", member.fullName.c_str(), member.house.location.c_str());
                 cout << "Description: " << member.house.description << endl;
                 printf("Available time range: %s - %s \n", member.house.listedStart.c_str(), member.house.listedEnd.c_str());
                 cout << "Days available: " << time.checkDifTime(member.house.listedStart, member.house.listedEnd) << endl;
+                cout << "Total consuming points: " << time.checkDifTime(member.house.listedStart, member.house.listedEnd) * member.house.cosumingPoints << " ( you have " << this->creditPoints << " )" << endl;
                 cout << "House rating score: ";
                 if (member.house.numberOfTimeRated == 0)
                 {
@@ -437,7 +447,7 @@ public:
             return;
         }
 
-        (*(this->allRequests)).push_back(Request(ownerUsername, this->userName, startDate, endDate, "pending"));
+        (*(this->allRequests)).push_back(Request(ownerUsername, this->userName, startDate, endDate, "pending", owner->house.cosumingPoints));
         cout << "Successfully make a request to " << ownerUsername << endl
              << endl;
     }
@@ -498,6 +508,10 @@ public:
                 this->house.occupiedStart = request.requestStartDate;
                 this->house.occupiedEnd = request.requestEndDate;
                 request.status = "accepted";
+                Member *occupier = memberExist(request.usernameOfOccupier);
+                Time time;
+                occupier->creditPoints -= request.consumingPointPerDay * time.checkDifTime(request.requestStartDate, request.requestEndDate);
+                this->creditPoints += request.consumingPointPerDay * time.checkDifTime(request.requestStartDate, request.requestEndDate);
                 found = true;
                 cout << "Successfully accept request of: " << usernameOfRequest << endl
                      << endl;

@@ -146,7 +146,7 @@ public:
                         {
                             string request = extractedData.at(i).substr(9, extractedData.at(i).length());
                             vector<string> requestField = extractDataByLine(request, ':');
-                            Request newRequest(member.userName, requestField.at(0), requestField.at(1), requestField.at(2), requestField.at(3));
+                            Request newRequest(member.userName, requestField.at(0), requestField.at(1), requestField.at(2), requestField.at(3), stoi(requestField.at(4)));
                             this->allRequests.push_back(newRequest);
                         }
                     }
@@ -171,7 +171,7 @@ public:
                 {
                     if (request.usernameOfOwner == member.userName)
                     {
-                        string eachRequest = ",request: " + request.usernameOfOccupier + ":" + request.requestStartDate + ":" + request.requestEndDate + ":" + request.status;
+                        string eachRequest = ",request: " + request.usernameOfOccupier + ":" + request.requestStartDate + ":" + request.requestEndDate + ":" + request.status + ":" + to_string(request.consumingPointPerDay);
                         fs << eachRequest;
                     }
                 }
