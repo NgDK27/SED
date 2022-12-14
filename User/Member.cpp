@@ -2,9 +2,9 @@
 #include <vector>
 #include <string>
 #include <fstream>
-#include "../House/House.h"
-#include "../Utils/Time.h"
-#include "../Request/Request.h"
+#include "../House/House.cpp"
+#include "../Utils/Time.cpp"
+#include "../Request/Request.cpp"
 
 #ifndef MEMBER
 #define MEMBER
@@ -45,18 +45,16 @@ public:
         return this->userName + "," + this->fullName + "," + this->password + "," + this->phoneNumber + "," + to_string(this->creditPoints) + "," + this->house.location + "," + this->house.description + "," + to_string(this->house.isListed) + "," + this->house.listedStart + "," + this->house.listedEnd + "," + this->house.occupiedStart + "," + this->house.occupiedEnd + "," + this->house.occupierUsername + "," + to_string(this->house.requiredRating) + "," + to_string(this->house.cosumingPoints) + "," + to_string(this->ratingScore) + "," + to_string(this->numberOfTimeRated) + "," + to_string(this->house.ratingScore) + "," + to_string(this->house.numberOfTimeRated);
     }
 
-    bool memberExist(string username)
+    Member *memberExist(string usernameInput)
     {
-        bool result = false;
-        for (Member member : *this->allMembers)
+        for (Member &member : *this->allMembers)
         {
-            if (member.userName == userName)
+            if (member.userName == usernameInput)
             {
-                result = true;
-                break;
+                return &member;
             }
         }
-        return result;
+        return nullptr;
     }
 
     string getFullName()
@@ -388,8 +386,9 @@ public:
         getline(cin >> ws, ownerUsername);
         cout << endl;
 
-        bool found = memberExist(ownerUsername);
-        if (!found)
+        Member *owner = memberExist(ownerUsername);
+
+        if (owner == nullptr)
         {
             cout << "User not found, please check your input again !" << endl
                  << endl;
@@ -408,27 +407,59 @@ public:
             }
         }
 
+        // Check if this house is listed
+
+        bool isReallyListed = owner->house.isListed;
+
+        if (!isReallyListed)
+        {
+            cout << "This user did not list their house for exchange" << endl
+                 << endl;
+            return;
+        }
+
+        cout << "Their house is available during: " << owner->house.listedStart << " - " << owner->house.listedEnd << endl;
         cout << "Start date (DD/MM/YYYY): " << endl;
         getline(cin >> ws, startDate);
         cout << endl;
         cout << "End date (DD/MM/YYYY): " << endl;
         getline(cin >> ws, endDate);
         cout << endl;
-        (*(this->allRequests)).push_back(Request(ownerUsername, this->userName, startDate, endDate));
+
+        Time time;
+        string listedStartDate = owner->house.listedStart;
+        string listedEndDate = owner->house.listedEnd;
+
+        if (!(time.checkDifTime(startDate, listedStartDate) <= 0 && time.checkDifTime(endDate, listedEndDate) >= 0))
+        {
+            cout << "Invalid time range" << endl
+                 << endl;
+            return;
+        }
+
+        (*(this->allRequests)).push_back(Request(ownerUsername, this->userName, startDate, endDate, "pending"));
         cout << "Successfully make a request to " << ownerUsername << endl
              << endl;
     }
 
     void checkForMyRequest()
     {
+        bool found = false;
         for (Request request : *this->allRequests)
         {
-            if (request.usernameOfOwner == this->userName)
+            if (request.usernameOfOwner == this->userName && request.status == "pending")
             {
                 cout << "Request from: " << request.usernameOfOccupier << endl;
-                cout << "Date: " << request.requestStartDate << " - " << request.requestEndDate << endl;
+                cout << "Date: " << request.requestStartDate << " - " << request.requestEndDate << endl
+                     << endl;
+                found = true;
             }
-            cout << endl;
+        }
+
+        if (!found)
+        {
+            cout << "There is no request coming to you" << endl
+                 << endl;
         }
     }
 
@@ -458,20 +489,40 @@ public:
         cout << "Enter the username of whom you want to accept: ";
         getline(cin >> ws, usernameOfRequest);
 
-        for (Request request : *allRequests)
+        bool found = false;
+        for (Request &request : *allRequests)
         {
             if (request.usernameOfOccupier == usernameOfRequest && request.usernameOfOwner == this->userName)
             {
                 this->house.occupierUsername = usernameOfRequest;
                 this->house.occupiedStart = request.requestStartDate;
                 this->house.occupiedEnd = request.requestEndDate;
+                request.status = "accepted";
+                found = true;
                 cout << "Successfully accept request of: " << usernameOfRequest << endl
                      << endl;
-                return;
+
+                // Reject other request to this owner
+                for (Request &request : *allRequests)
+                {
+                    if (request.usernameOfOwner == this->userName && request.status != "accepted")
+                    {
+                        this->house.occupierUsername = usernameOfRequest;
+                        this->house.occupiedStart = request.requestStartDate;
+                        this->house.occupiedEnd = request.requestEndDate;
+                        request.status = "rejected";
+                        break;
+                    }
+                }
+                break;
             }
         }
-        cout << "No request of: " << usernameOfRequest << " found" << endl;
-        cout << "Please check again" << endl;
+
+        if (!found)
+        {
+            cout << "No request of: " << usernameOfRequest << " found" << endl;
+            cout << "Please check again" << endl;
+        }
     }
 
     void memberMenu(vector<Member> &allMembers, vector<Request> &allRequests)

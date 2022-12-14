@@ -1,8 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include "./User/Member.h"
-#include "./Request/Request.h"
+#include "./User/Member.cpp"
+#include "./Request/Request.cpp"
 
 using namespace std;
 
@@ -146,7 +146,7 @@ public:
                         {
                             string request = extractedData.at(i).substr(9, extractedData.at(i).length());
                             vector<string> requestField = extractDataByLine(request, ':');
-                            Request newRequest(member.userName, requestField.at(0), requestField.at(1), requestField.at(2));
+                            Request newRequest(member.userName, requestField.at(0), requestField.at(1), requestField.at(2), requestField.at(3));
                             this->allRequests.push_back(newRequest);
                         }
                     }
@@ -171,7 +171,7 @@ public:
                 {
                     if (request.usernameOfOwner == member.userName)
                     {
-                        string eachRequest = ",request: " + request.usernameOfOccupier + ":" + request.requestStartDate + ":" + request.requestEndDate;
+                        string eachRequest = ",request: " + request.usernameOfOccupier + ":" + request.requestStartDate + ":" + request.requestEndDate + ":" + request.status;
                         fs << eachRequest;
                     }
                 }
