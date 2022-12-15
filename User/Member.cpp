@@ -20,6 +20,7 @@ private:
     int creditPoints;
     int numberOfTimeRated;
     double ratingScore;
+    vector<string> comments;
     House house;
 
     vector<Member> *allMembers;
@@ -260,6 +261,11 @@ public:
         {
             cout << "None";
         }
+        if (this->house.occupierUsername != "")
+        {
+            cout << "Current occupier: " << this->house.occupierUsername << endl;
+            cout << "From: " << this->house.occupiedStart << " - " << this->house.occupiedEnd << endl;
+        }
         cout << endl
              << endl;
     }
@@ -345,7 +351,7 @@ public:
                 cout << "Description: " << member.house.description << endl;
                 printf("Available time range: %s - %s \n", member.house.listedStart.c_str(), member.house.listedEnd.c_str());
                 cout << "Days available: " << time.checkDifTime(member.house.listedStart, member.house.listedEnd) << endl;
-                cout << "Total consuming points: " << time.checkDifTime(member.house.listedStart, member.house.listedEnd) * member.house.cosumingPoints << " ( you have " << this->creditPoints << " )" << endl;
+                cout << "Consuming points per day: " << member.house.cosumingPoints << " ( you have " << this->creditPoints << " )" << endl;
                 cout << "House rating score: ";
                 if (member.house.numberOfTimeRated == 0)
                 {
@@ -539,6 +545,37 @@ public:
         }
     }
 
+    void rateOthers()
+    {
+        vector<Request *> requestRelatedToThisPerson;
+        for (Request &requestFromAll : *this->allRequests)
+        {
+            if (requestFromAll.status == "accepted" && (requestFromAll.usernameOfOccupier == this->userName || requestFromAll.usernameOfOwner == this->userName))
+            {
+                requestRelatedToThisPerson.push_back(&requestFromAll);
+            }
+        }
+
+        int i = 1;
+        for (Request *request : requestRelatedToThisPerson)
+        {
+            if (request->usernameOfOccupier == this->userName)
+            {
+                printf("%d. Rate %s as an occupier \n \n", i, request->usernameOfOwner.c_str());
+            }
+            else
+            {
+                printf("%d. Rate %s as a house owner \n \n", i, request->usernameOfOccupier.c_str());
+            }
+            i++;
+        }
+
+        cout << "Your choices: ";
+        int userInput;
+        cin >> userInput;
+        cout << endl;
+    }
+
     void memberMenu(vector<Member> &allMembers, vector<Request> &allRequests)
     {
         this->allMembers = &allMembers;
@@ -561,6 +598,7 @@ public:
             cout << "7: Request for a house" << endl;
             cout << "8: Check request of your house" << endl;
             cout << "9: Accept a request" << endl;
+            cout << "10: Rate others" << endl;
             cout << "0: Exit" << endl;
             cout << "Enter your choice: ";
             int userInput;
@@ -620,6 +658,15 @@ public:
             else if (userInput == 9)
             {
                 this->acceptRequest();
+            }
+            else if (userInput == 10)
+            {
+                this->rateOthers();
+            }
+            else
+            {
+                cout << "Invalid input, try again" << endl
+                     << endl;
             }
         }
     }
