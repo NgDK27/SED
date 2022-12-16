@@ -133,22 +133,23 @@ public:
                 Member member(username, fullname, password, phoneNumber, creditPoints, numberOfRatedTimeOwner, ratingScoreOwner, House(location, description, isListed, listedStart, listedEnd, occupiedStart, occupiedEnd, occupierUsername, requiredRating, consumingPoint, numberOfRatedTimeHouse, ratingScoreHouse));
                 for (int i = 19; i < extractedData.size(); i++)
                 {
-                    string prefix = extractedData.at(i).substr(0, 7);
-                    if (prefix == "review:")
+                    string prefix = extractedData.at(i).substr(0, 6);
+                    if (prefix == "person")
                     {
-                        string comment = extractedData.at(i).substr(8, extractedData.at(i).length());
+                        string comment = extractedData.at(i).substr(7, extractedData.at(i).length());
+                        member.comments.push_back(comment);
+                    }
+                    else if (prefix == "house:")
+                    {
+                        string comment = extractedData.at(i).substr(6, extractedData.at(i).length());
                         member.house.comments.push_back(comment);
                     }
-                    else
+                    else if (prefix == "reques")
                     {
-                        string prefix = extractedData.at(i).substr(0, 8);
-                        if (prefix == "request:")
-                        {
-                            string request = extractedData.at(i).substr(9, extractedData.at(i).length());
-                            vector<string> requestField = extractDataByLine(request, ':');
-                            Request newRequest(member.userName, requestField.at(0), requestField.at(1), requestField.at(2), requestField.at(3), stoi(requestField.at(4)));
-                            this->allRequests.push_back(newRequest);
-                        }
+                        string request = extractedData.at(i).substr(9, extractedData.at(i).length());
+                        vector<string> requestField = extractDataByLine(request, ':');
+                        Request newRequest(member.userName, requestField.at(0), requestField.at(1), requestField.at(2), requestField.at(3), stoi(requestField.at(4)));
+                        this->allRequests.push_back(newRequest);
                     }
                 }
 

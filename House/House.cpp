@@ -47,6 +47,7 @@ public:
         this->listedEnd = listedEnd;
         this->occupiedStart = occupiedStart;
         this->occupiedEnd = occupiedEnd;
+        this->occupierUsername = occupierUsername;
         this->requiredRating = requiredRating;
         this->cosumingPoints = cosumingPoints;
         this->numberOfTimeRated = numberOfTimeRated;

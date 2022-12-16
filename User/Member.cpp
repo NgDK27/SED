@@ -286,7 +286,33 @@ public:
             cout << endl;
         }
         cout << "Location: " << this->house.location << endl;
+        for (Request &request : *allRequests)
+        {
+            if (request.status == "accepted" && request.usernameOfOccupier == this->userName)
+            {
+                cout << "Current occupation:" << request.usernameOfOwner << "'s house" << endl;
+                cout << "Time range: " << request.requestStartDate << " - " << request.requestEndDate << endl;
+            }
+        }
         cout << endl;
+    }
+
+    void viewMyComments()
+    {
+        if (this->comments.size() == 0)
+        {
+            cout << "You have no reviews" << endl
+                 << endl;
+            return;
+        }
+        cout << "Reviews from others to you: " << endl
+             << endl;
+
+        for (int i = 0; i < this->comments.size(); i++)
+        {
+            cout << this->comments.at(i) << endl
+                 << endl;
+        }
     }
 
     void viewCommentsOfMyHouse()
@@ -297,7 +323,8 @@ public:
                  << endl;
             return;
         }
-        cout << "REVIEWS OF YOUR HOUSE: " << endl;
+        cout << "Reviews of your house: " << endl
+             << endl;
         for (int i = 0; i < this->house.comments.size(); i++)
         {
             string currentComment = this->house.comments.at(i);
@@ -569,11 +596,59 @@ public:
             }
             i++;
         }
-
-        cout << "Your choices: ";
         int userInput;
+        cout << "Your choices: ";
+
         cin >> userInput;
+        cin.clear();
         cout << endl;
+
+        userInput = userInput - 1;
+        if (userInput < 0 || userInput >= requestRelatedToThisPerson.size())
+        {
+            cout << "Invalid input, try again" << endl;
+        }
+        Request *userChoice = requestRelatedToThisPerson.at(userInput);
+
+        if (userChoice->usernameOfOccupier == this->userName)
+        {
+            int scores;
+            string comments;
+            cout << "Enter the scores for " << userChoice->usernameOfOwner << "'s house (-10 to 10): ";
+            cin >> scores;
+            cout << "Enter the comment: ";
+            getline(cin >> ws, comments);
+            cout << endl;
+            Member *owner = memberExist(userChoice->usernameOfOwner);
+            Member *occupier = memberExist(userChoice->usernameOfOccupier);
+            string finalComments = occupier->userName + " rated " + to_string(scores) + " with a comment: " + comments;
+            owner->house.comments.push_back(finalComments);
+            int oldNumberOfTimeRated = owner->house.numberOfTimeRated;
+            owner->house.numberOfTimeRated += 1;
+            owner->house.ratingScore = ((oldNumberOfTimeRated * owner->house.ratingScore) + scores) / owner->house.numberOfTimeRated;
+            cout << "Successfully rate " << owner->userName << "'s house" << endl
+                 << endl;
+        }
+
+        if (userChoice->usernameOfOwner == this->userName)
+        {
+            string comments;
+            int scores;
+            cout << "Enter the scores for " << userChoice->usernameOfOccupier << " (-10 to 10): ";
+            cin >> scores;
+            cout << "Enter the comment: ";
+            getline(cin >> ws, comments);
+            cout << endl;
+            Member *owner = memberExist(userChoice->usernameOfOwner);
+            Member *occupier = memberExist(userChoice->usernameOfOccupier);
+            string finalComments = owner->userName + " rated " + to_string(scores) + " with a comment: " + comments;
+            occupier->comments.push_back(finalComments);
+            int oldNumberOfTimeRated = occupier->numberOfTimeRated;
+            occupier->numberOfTimeRated += 1;
+            occupier->ratingScore = ((oldNumberOfTimeRated * occupier->ratingScore) + scores) / occupier->numberOfTimeRated;
+            cout << "Successfully rate " << occupier->userName << endl
+                 << endl;
+        }
     }
 
     void memberMenu(vector<Member> &allMembers, vector<Request> &allRequests)
@@ -584,21 +659,22 @@ public:
         {
             cout << "1: List/ Unlist your house" << endl;
             cout << "2: View your info" << endl;
-            cout << "3: View your house info" << endl;
-            cout << "4: View your house reviews" << endl;
+            cout << "3: View your reviews" << endl;
+            cout << "4: View your house info" << endl;
+            cout << "5: View your house reviews" << endl;
             if (!this->haveHouse())
             {
-                cout << "5: Add your house" << endl;
+                cout << "6: Add your house" << endl;
             }
             else
             {
-                cout << "5: Update your house info" << endl;
+                cout << "6: Update your house info" << endl;
             }
-            cout << "6: Search for houses" << endl;
-            cout << "7: Request for a house" << endl;
-            cout << "8: Check request of your house" << endl;
-            cout << "9: Accept a request" << endl;
-            cout << "10: Rate others" << endl;
+            cout << "7: Search for houses" << endl;
+            cout << "8: Request for a house" << endl;
+            cout << "9: Check request of your house" << endl;
+            cout << "10: Accept a request" << endl;
+            cout << "11: Rate others" << endl;
             cout << "0: Exit" << endl;
             cout << "Enter your choice: ";
             int userInput;
@@ -626,13 +702,17 @@ public:
             }
             else if (userInput == 3)
             {
-                this->viewMyHouseInfo();
+                this->viewMyComments();
             }
             else if (userInput == 4)
             {
-                this->viewCommentsOfMyHouse();
+                this->viewMyHouseInfo();
             }
             else if (userInput == 5)
+            {
+                this->viewCommentsOfMyHouse();
+            }
+            else if (userInput == 6)
             {
                 if (!this->haveHouse())
                 {
@@ -643,23 +723,23 @@ public:
                     this->updateHouse();
                 }
             }
-            else if (userInput == 6)
+            else if (userInput == 7)
             {
                 this->searchForSuitableHouses();
             }
-            else if (userInput == 7)
+            else if (userInput == 8)
             {
                 this->makeARequest();
             }
-            else if (userInput == 8)
+            else if (userInput == 9)
             {
                 this->checkForMyRequest();
             }
-            else if (userInput == 9)
+            else if (userInput == 10)
             {
                 this->acceptRequest();
             }
-            else if (userInput == 10)
+            else if (userInput == 11)
             {
                 this->rateOthers();
             }
