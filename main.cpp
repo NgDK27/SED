@@ -176,6 +176,18 @@ public:
                         fs << eachRequest;
                     }
                 }
+
+                for (string comment : member.comments)
+                {
+                    string result = ",person:" + comment;
+                    fs << result;
+                }
+
+                for (string comment : member.house.comments)
+                {
+                    string result = ",house:" + comment;
+                    fs << result;
+                }
                 fs << endl;
             }
         }

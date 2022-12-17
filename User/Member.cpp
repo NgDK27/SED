@@ -243,7 +243,7 @@ public:
         cout << "Location: " << this->house.location << endl;
         cout << "Description: " << this->house.description << endl;
         cout << "House rating score: " << this->house.ratingScore << " ";
-        if (this->numberOfTimeRated == 0)
+        if (this->house.numberOfTimeRated == 0)
         {
             cout << "(This is because you have not been rated yet, so don't worry)" << endl;
         }
