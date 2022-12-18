@@ -242,24 +242,20 @@ public:
         cout << "YOUR HOUSE INFO" << endl;
         cout << "Location: " << this->house.location << endl;
         cout << "Description: " << this->house.description << endl;
-        cout << "House rating score: " << this->house.ratingScore << " ";
         if (this->house.numberOfTimeRated == 0)
         {
-            cout << "(This is because you have not been rated yet, so don't worry)" << endl;
+            cout << "Your house have not been rated yet" << endl;
         }
         else
         {
+            cout << "House rating score: " << this->house.ratingScore << " ";
             cout << endl;
         }
-        cout << "Available time: ";
         if (this->house.isListed)
         {
+            cout << "Available time: ";
             cout << this->house.listedStart << " - " << this->house.listedEnd << endl;
             cout << "Days available: " << time.checkDifTime(this->house.listedStart, this->house.listedEnd) << endl;
-        }
-        else
-        {
-            cout << "None";
         }
         if (this->house.occupierUsername != "")
         {
