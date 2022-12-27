@@ -647,6 +647,82 @@ public:
         }
     }
 
+    void adminMenu(vector<Member> &allMembers, vector<Request> &allRequests)
+    {
+        this->allMembers = &allMembers;
+        this->allRequests = &allRequests;
+        while (true)
+        {
+            cout << "1: View all members" << endl;
+            cout << "2: View all houses" << endl;
+            cout << "0: Exit" << endl;
+            cout << "Enter your choice: ";
+            int userInput;
+            cin >> userInput;
+            cout << endl;
+            if (userInput == 0)
+            {
+                cin.clear();
+                return;
+            }
+            else if (userInput == 1)
+            {
+                for (Member member : allMembers)
+                {
+                    cout << "Username: " << member.userName << endl;
+                    cout << "Full name: " << member.fullName << endl;
+                    cout << "Phone: " << member.phoneNumber << endl;
+                    cout << "Credit points: " << member.creditPoints << endl;
+                    cout << "Rating: " << member.ratingScore << (member.numberOfTimeRated == 0 ? " (This person hasn't been rated)" : " ") << endl;
+                    if (member.comments.size() > 0)
+                    {
+                        cout << "All comments: " << endl;
+                    }
+                    for (string comment : member.comments)
+                    {
+                        cout << "  " << comment << endl;
+                    }
+                    cout << endl;
+                }
+            }
+            else if (userInput == 2)
+            {
+                for (Member member : allMembers)
+                {
+                    if (member.haveHouse())
+                    {
+                        cout << "Username: " << member.userName << endl;
+                        cout << "House location: " << member.house.location << endl;
+                        cout << "Description: " << member.house.description << endl;
+                        if (member.house.isListed)
+                        {
+                            cout << "Listed start date: " << member.house.listedStart << endl;
+                            cout << "Listed end date: " << member.house.listedEnd << endl;
+                            cout << "Rating score: " << member.house.ratingScore << (member.house.numberOfTimeRated == 0 ? " (This house hasn't been rated)" : " ") << endl;
+                            cout << "Consume points: " << member.house.cosumingPoints << endl;
+                            cout << "Required rating: " << member.house.requiredRating << endl;
+                            if (member.house.occupierUsername != "")
+                            {
+                                cout << "Occupier: " << member.house.occupierUsername << endl;
+                                cout << "Occupied time start: " << member.house.occupiedStart << endl;
+                                cout << "Occupied time end: " << member.house.occupiedEnd << endl;
+                            }
+                            else
+                            {
+                                cout << "House is not occupied" << endl;
+                            }
+                        }
+                        else
+                        {
+                            cout << "House is not listed" << endl;
+                        }
+                    }
+                    cout << endl;
+                }
+            }
+        }
+    }
+
     void memberMenu(vector<Member> &allMembers, vector<Request> &allRequests)
     {
         this->allMembers = &allMembers;

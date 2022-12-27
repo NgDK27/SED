@@ -29,10 +29,6 @@ public:
 
         time_t newTime = mktime(&a);
         return newTime;
-        // struct tm *newTime = localtime(&x);
-        // char s[100];
-        // strftime(s, 100, "%d %m %y", newTime);
-        // printf(s);
     }
 
     int checkDifTime(string time1, string time2)

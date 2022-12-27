@@ -144,7 +144,7 @@ public:
                         string comment = extractedData.at(i).substr(6, extractedData.at(i).length());
                         member.house.comments.push_back(comment);
                     }
-                    else if (prefix == "reques")
+                    else if (prefix == "request")
                     {
                         string request = extractedData.at(i).substr(9, extractedData.at(i).length());
                         vector<string> requestField = extractDataByLine(request, ':');
@@ -299,7 +299,17 @@ int main()
 
         else if (userInput == 3)
         {
-            cout << "Admin stuff" << endl;
+            string userName;
+            string password;
+            cout << "Enter your username: ";
+            getline(cin >> ws, userName);
+            cout << "Enter your password: ";
+            getline(cin >> ws, password);
+            cout << endl;
+            if (userName == "admin" && password == "admin")
+            {
+                app.allMembers[0].adminMenu(app.allMembers, app.allRequests);
+            }
         }
 
         else if (userInput == 0)
