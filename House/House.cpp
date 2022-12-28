@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 
+#ifndef HOUSE
+#define HOUSE
 using namespace std;
 class House
 {
@@ -45,6 +47,7 @@ public:
         this->listedEnd = listedEnd;
         this->occupiedStart = occupiedStart;
         this->occupiedEnd = occupiedEnd;
+        this->occupierUsername = occupierUsername;
         this->requiredRating = requiredRating;
         this->cosumingPoints = cosumingPoints;
         this->numberOfTimeRated = numberOfTimeRated;
@@ -54,3 +57,5 @@ public:
     friend class Member;
     friend class System;
 };
+
+#endif

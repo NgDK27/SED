@@ -17,3 +17,6 @@
 17. number of time owner is rated
 18. house rate
 19. number of time house is rated
+20 onward could be comment or request
+For comment, they should follow this format:   commentfromowner usernameOfComment: abc, commentfromoccupier
+For request, they should follow this format:   request usernameOfRequest:startDate:EndDate

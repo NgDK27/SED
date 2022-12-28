@@ -2,7 +2,7 @@
 #include <vector>
 #include <string>
 #include "./User/Member.cpp"
-#include "./Rating/Rating.cpp"
+#include "./Request/Request.cpp"
 
 using namespace std;
 
@@ -10,7 +10,7 @@ class System
 {
 public:
     vector<Member> allMembers;
-    vector<Rating> allRating;
+    vector<Request> allRequests;
 
     System() {}
 
@@ -73,14 +73,14 @@ public:
         cout << endl;
     }
 
-    vector<string> extractDataByLine(string line)
+    vector<string> extractDataByLine(string line, char specifer = ',')
     {
         vector<string> data;
         string field = "";
-        line += ",";
+        line += specifer;
         for (char ch : line)
         {
-            if (ch == ',')
+            if (ch == specifer)
             {
                 data.push_back(field);
                 field = "";
@@ -131,6 +131,28 @@ public:
                 double ratingScoreHouse = stod(extractedData.at(17));
                 int numberOfRatedTimeHouse = stoi(extractedData.at(18));
                 Member member(username, fullname, password, phoneNumber, creditPoints, numberOfRatedTimeOwner, ratingScoreOwner, House(location, description, isListed, listedStart, listedEnd, occupiedStart, occupiedEnd, occupierUsername, requiredRating, consumingPoint, numberOfRatedTimeHouse, ratingScoreHouse));
+                for (int i = 19; i < extractedData.size(); i++)
+                {
+                    string prefix = extractedData.at(i).substr(0, 6);
+                    if (prefix == "person")
+                    {
+                        string comment = extractedData.at(i).substr(7, extractedData.at(i).length());
+                        member.comments.push_back(comment);
+                    }
+                    else if (prefix == "house:")
+                    {
+                        string comment = extractedData.at(i).substr(6, extractedData.at(i).length());
+                        member.house.comments.push_back(comment);
+                    }
+                    else if (prefix == "request")
+                    {
+                        string request = extractedData.at(i).substr(9, extractedData.at(i).length());
+                        vector<string> requestField = extractDataByLine(request, ':');
+                        Request newRequest(member.userName, requestField.at(0), requestField.at(1), requestField.at(2), requestField.at(3), stoi(requestField.at(4)));
+                        this->allRequests.push_back(newRequest);
+                    }
+                }
+
                 this->allMembers.push_back(member);
             }
         }
@@ -145,7 +167,28 @@ public:
         {
             for (Member member : this->allMembers)
             {
-                fs << member.toString() << endl;
+                fs << member.toString();
+                for (Request request : this->allRequests)
+                {
+                    if (request.usernameOfOwner == member.userName)
+                    {
+                        string eachRequest = ",request: " + request.usernameOfOccupier + ":" + request.requestStartDate + ":" + request.requestEndDate + ":" + request.status + ":" + to_string(request.consumingPointPerDay);
+                        fs << eachRequest;
+                    }
+                }
+
+                for (string comment : member.comments)
+                {
+                    string result = ",person:" + comment;
+                    fs << result;
+                }
+
+                for (string comment : member.house.comments)
+                {
+                    string result = ",house:" + comment;
+                    fs << result;
+                }
+                fs << endl;
             }
         }
         fs.close();
@@ -201,7 +244,6 @@ int main()
     cout << endl;
     while (true)
     {
-
         cout << "Use the app as 1. Guest   2. Member   3. Admin   0. Quit (Must use this for the program to update data)" << endl
              << endl;
         cout << "Enter your choice: ";
@@ -249,14 +291,25 @@ int main()
                 if (app.allMembers.at(existedMemberIndex).verifyPassword(password))
                 {
                     cout << "Welcome, " << app.allMembers.at(existedMemberIndex).getFullName() << endl;
-                    app.allMembers.at(existedMemberIndex).memberMenu(app.allMembers);
+                    app.allMembers.at(existedMemberIndex)
+                        .memberMenu(app.allMembers, app.allRequests);
                 }
             }
         }
 
         else if (userInput == 3)
         {
-            cout << "Admin stuff" << endl;
+            string userName;
+            string password;
+            cout << "Enter your username: ";
+            getline(cin >> ws, userName);
+            cout << "Enter your password: ";
+            getline(cin >> ws, password);
+            cout << endl;
+            if (userName == "admin" && password == "admin")
+            {
+                app.allMembers[0].adminMenu(app.allMembers, app.allRequests);
+            }
         }
 
         else if (userInput == 0)

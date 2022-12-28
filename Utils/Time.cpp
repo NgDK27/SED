@@ -17,14 +17,18 @@ public:
         getline(ss, d, '/');
         getline(ss, m, '/');
         getline(ss, y, '/');
+        struct tm a;
+        try
+        {
+            a = {0, 0, 0, stoi(d), stoi(m) - 1, stoi(y) - 1900};
+        }
+        catch (const std::exception &e)
+        {
+            cout << time << endl;
+        }
 
-        struct tm a = {0, 0, 0, stoi(d), stoi(m) - 1, stoi(y) - 1900};
         time_t newTime = mktime(&a);
         return newTime;
-        // struct tm *newTime = localtime(&x);
-        // char s[100];
-        // strftime(s, 100, "%d %m %y", newTime);
-        // printf(s);
     }
 
     int checkDifTime(string time1, string time2)
