@@ -505,7 +505,7 @@ public:
     void acceptRequest()
     {
         cout << "To accept a request, you must enter the username of the one you want to accept" << endl;
-        cout << "If you do not have it, please check your incoming request by using (8)" << endl
+        cout << "If you do not have it, please check your incoming request by using (9)" << endl
              << endl;
         cout << "1: I would like to proceed (reject all others)" << endl;
         cout << "2: Go back" << endl
@@ -579,71 +579,79 @@ public:
             }
         }
 
-        int i = 1;
-        for (Request *request : requestRelatedToThisPerson)
+        if (requestRelatedToThisPerson.size() > 0)
         {
-            if (request->usernameOfOccupier == this->userName)
+            int i = 1;
+            for (Request *request : requestRelatedToThisPerson)
             {
-                printf("%d. Rate %s as an occupier \n \n", i, request->usernameOfOwner.c_str());
+                if (request->usernameOfOccupier == this->userName)
+                {
+                    printf("%d. Rate %s as an occupier \n \n", i, request->usernameOfOwner.c_str());
+                }
+                else
+                {
+                    printf("%d. Rate %s as a house owner \n \n", i, request->usernameOfOccupier.c_str());
+                }
+                i++;
             }
-            else
+            int userInput;
+            cout << "Your choices: ";
+
+            cin >> userInput;
+            cin.clear();
+            cout << endl;
+
+            userInput = userInput - 1;
+            if (userInput < 0 || userInput >= requestRelatedToThisPerson.size())
             {
-                printf("%d. Rate %s as a house owner \n \n", i, request->usernameOfOccupier.c_str());
+                cout << "Invalid input, try again" << endl;
             }
-            i++;
+            Request *userChoice = requestRelatedToThisPerson.at(userInput);
+
+            if (userChoice->usernameOfOccupier == this->userName)
+            {
+                int scores;
+                string comments;
+                cout << "Enter the scores for " << userChoice->usernameOfOwner << "'s house (-10 to 10): ";
+                cin >> scores;
+                cout << "Enter the comment: ";
+                getline(cin >> ws, comments);
+                cout << endl;
+                Member *owner = memberExist(userChoice->usernameOfOwner);
+                Member *occupier = memberExist(userChoice->usernameOfOccupier);
+                string finalComments = occupier->userName + " rated " + to_string(scores) + " with a comment: " + comments;
+                owner->house.comments.push_back(finalComments);
+                int oldNumberOfTimeRated = owner->house.numberOfTimeRated;
+                owner->house.numberOfTimeRated += 1;
+                owner->house.ratingScore = ((oldNumberOfTimeRated * owner->house.ratingScore) + scores) / owner->house.numberOfTimeRated;
+                cout << "Successfully rate " << owner->userName << "'s house" << endl
+                     << endl;
+            }
+
+            if (userChoice->usernameOfOwner == this->userName)
+            {
+                string comments;
+                int scores;
+                cout << "Enter the scores for " << userChoice->usernameOfOccupier << " (-10 to 10): ";
+                cin >> scores;
+                cout << "Enter the comment: ";
+                getline(cin >> ws, comments);
+                cout << endl;
+                Member *owner = memberExist(userChoice->usernameOfOwner);
+                Member *occupier = memberExist(userChoice->usernameOfOccupier);
+                string finalComments = owner->userName + " rated " + to_string(scores) + " with a comment: " + comments;
+                occupier->comments.push_back(finalComments);
+                int oldNumberOfTimeRated = occupier->numberOfTimeRated;
+                occupier->numberOfTimeRated += 1;
+                occupier->ratingScore = ((oldNumberOfTimeRated * occupier->ratingScore) + scores) / occupier->numberOfTimeRated;
+                cout << "Successfully rate " << occupier->userName << endl
+                     << endl;
+            }
         }
-        int userInput;
-        cout << "Your choices: ";
-
-        cin >> userInput;
-        cin.clear();
-        cout << endl;
-
-        userInput = userInput - 1;
-        if (userInput < 0 || userInput >= requestRelatedToThisPerson.size())
+        else
         {
-            cout << "Invalid input, try again" << endl;
-        }
-        Request *userChoice = requestRelatedToThisPerson.at(userInput);
-
-        if (userChoice->usernameOfOccupier == this->userName)
-        {
-            int scores;
-            string comments;
-            cout << "Enter the scores for " << userChoice->usernameOfOwner << "'s house (-10 to 10): ";
-            cin >> scores;
-            cout << "Enter the comment: ";
-            getline(cin >> ws, comments);
+            cout << "No one have rented your house" << endl;
             cout << endl;
-            Member *owner = memberExist(userChoice->usernameOfOwner);
-            Member *occupier = memberExist(userChoice->usernameOfOccupier);
-            string finalComments = occupier->userName + " rated " + to_string(scores) + " with a comment: " + comments;
-            owner->house.comments.push_back(finalComments);
-            int oldNumberOfTimeRated = owner->house.numberOfTimeRated;
-            owner->house.numberOfTimeRated += 1;
-            owner->house.ratingScore = ((oldNumberOfTimeRated * owner->house.ratingScore) + scores) / owner->house.numberOfTimeRated;
-            cout << "Successfully rate " << owner->userName << "'s house" << endl
-                 << endl;
-        }
-
-        if (userChoice->usernameOfOwner == this->userName)
-        {
-            string comments;
-            int scores;
-            cout << "Enter the scores for " << userChoice->usernameOfOccupier << " (-10 to 10): ";
-            cin >> scores;
-            cout << "Enter the comment: ";
-            getline(cin >> ws, comments);
-            cout << endl;
-            Member *owner = memberExist(userChoice->usernameOfOwner);
-            Member *occupier = memberExist(userChoice->usernameOfOccupier);
-            string finalComments = owner->userName + " rated " + to_string(scores) + " with a comment: " + comments;
-            occupier->comments.push_back(finalComments);
-            int oldNumberOfTimeRated = occupier->numberOfTimeRated;
-            occupier->numberOfTimeRated += 1;
-            occupier->ratingScore = ((oldNumberOfTimeRated * occupier->ratingScore) + scores) / occupier->numberOfTimeRated;
-            cout << "Successfully rate " << occupier->userName << endl
-                 << endl;
         }
     }
 
