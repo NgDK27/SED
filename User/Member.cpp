@@ -400,7 +400,7 @@ public:
     {
         cout << "To make a request, you must know the username of the owner, your start date and end date" << endl;
         cout << "You should also make sure that you have verified the information of the owner (Location or maybe check their review)" << endl;
-        cout << "If you do not have the required information, it is recommended that you go back and select Search for houses (6)" << endl;
+        cout << "If you do not have the required information, it is recommended that you go back and select Search for houses (7)" << endl;
         cout << endl;
         cout << "1: I would like to proceed" << endl;
         cout << "2: Go back" << endl;
@@ -545,10 +545,13 @@ public:
                 cout << "Successfully accept request of: " << usernameOfRequest << endl
                      << endl;
 
-                // Reject other request to this owner
+                // Reject other request to this owner if in overlapped time
                 for (Request &request : *allRequests)
                 {
-                    if (request.usernameOfOwner == this->userName && request.status != "accepted")
+                    if (request.usernameOfOwner == this->userName && request.status != "accepted" &&
+                        ((time.toTime(request.requestStartDate) > time.toTime(this->house.occupiedStart) && time.toTime(request.requestEndDate) < time.toTime(this->house.occupiedEnd)) ||
+                         (time.toTime(request.requestStartDate) < time.toTime(this->house.occupiedStart) && time.toTime(this->house.occupiedStart) < time.toTime(request.requestEndDate) < time.toTime(this->house.occupiedEnd)) ||
+                         (time.toTime(this->house.occupiedStart) < time.toTime(request.requestStartDate) < time.toTime(this->house.occupiedEnd) && time.toTime(request.requestEndDate) > time.toTime(this->house.occupiedEnd))))
                     {
                         this->house.occupierUsername = usernameOfRequest;
                         this->house.occupiedStart = request.requestStartDate;

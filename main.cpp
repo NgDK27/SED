@@ -65,12 +65,19 @@ public:
 
             cout << "Set consuming points for your house: ";
             cin >> consumingPoints;
+            Member newMemeber(userName, fullName, password, phoneNumber, 500, 0, 0, House(location, description, consumingPoints, 0, 0));
+            this->allMembers.push_back(newMemeber);
+            cout << "Successfully register a member ( " << userName << " )" << endl;
+            cout << endl;
         }
+        else
+        {
 
-        Member newMemeber(userName, fullName, password, phoneNumber, 500, 0, 0, House(location, description, consumingPoints, 0, 0));
-        this->allMembers.push_back(newMemeber);
-        cout << "Successfully register a member ( " << userName << " )" << endl;
-        cout << endl;
+            Member newMemeber(userName, fullName, password, phoneNumber, 500, 0, 0, House(location, description, 0, 0, 0));
+            this->allMembers.push_back(newMemeber);
+            cout << "Successfully register a member ( " << userName << " )" << endl;
+            cout << endl;
+        }
     }
 
     vector<string> extractDataByLine(string line, char specifer = ',')
@@ -144,7 +151,7 @@ public:
                         string comment = extractedData.at(i).substr(6, extractedData.at(i).length());
                         member.house.comments.push_back(comment);
                     }
-                    else if (prefix == "request")
+                    else if (prefix == "reques")
                     {
                         string request = extractedData.at(i).substr(9, extractedData.at(i).length());
                         vector<string> requestField = extractDataByLine(request, ':');
@@ -202,7 +209,7 @@ public:
             {
                 continue;
             }
-            printf("%s have a house in %s \n", member.fullName.c_str(), member.house.location.c_str());
+            printf("%s have a house in %s \n", member.userName.c_str(), member.house.location.c_str());
             cout << "Description: " << member.house.description << endl;
             cout << endl;
         }
