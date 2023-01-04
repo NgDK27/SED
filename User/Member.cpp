@@ -469,9 +469,27 @@ public:
         string listedStartDate = owner->house.listedStart;
         string listedEndDate = owner->house.listedEnd;
 
+        if (time.checkDifTime(startDate, endDate) < 0)
+        {
+            cout << "End date must be later than start date" << endl;
+            return;
+        }
+
         if (!(time.checkDifTime(startDate, listedStartDate) <= 0 && time.checkDifTime(endDate, listedEndDate) >= 0))
         {
             cout << "Invalid time range" << endl
+                 << endl;
+            return;
+        }
+
+        time_t requestStartDate = time.toTime(startDate);
+        time_t requestEndDate = time.toTime(endDate);
+        time_t occupierStartDate = time.toTime(owner->house.occupiedStart);
+        time_t occupierEndDate = time.toTime(owner->house.occupiedEnd);
+        if ((requestStartDate < occupierStartDate < requestEndDate) ||
+            (occupierStartDate < requestStartDate < requestEndDate))
+        {
+            cout << "There are already an occupier in this time range" << endl
                  << endl;
             return;
         }
@@ -529,6 +547,7 @@ public:
         getline(cin >> ws, usernameOfRequest);
 
         bool found = false;
+        bool rejected = false;
         for (Request &request : *allRequests)
         {
             if (request.usernameOfOccupier == usernameOfRequest && request.usernameOfOwner == this->userName)
@@ -557,11 +576,16 @@ public:
                         this->house.occupiedStart = request.requestStartDate;
                         this->house.occupiedEnd = request.requestEndDate;
                         request.status = "rejected";
+                        rejected = true;
                         break;
                     }
                 }
                 break;
             }
+        }
+        if (!rejected)
+        {
+            cout << "Successfully reject other request to this owner if in overlapped time" << endl;
         }
 
         if (!found)
