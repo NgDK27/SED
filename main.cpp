@@ -243,11 +243,11 @@ int main()
     cout << "VACATION HOUSE EXCHANGE APPLICATION" << endl
          << endl;
     cout << "Instructors: Mr. Linh Tran & Phong Ngo" << endl;
-    cout << "Group: Deo Nho" << endl;
-    cout << "sXXXXXXX, Student Name" << endl;
-    cout << "sXXXXXXX, Student Name" << endl;
-    cout << "sXXXXXXX, Student Name" << endl;
-    cout << "sXXXXXXX, Student Name" << endl;
+    cout << "Group: 14" << endl;
+    cout << "s3925921, Nguyen Dinh Khai" << endl;
+    cout << "s3926187, Dao Anh Vu" << endl;
+    cout << "s3925982, Bui Khac Tien" << endl;
+    cout << "s3877340, Hoang Pham Duc Anh" << endl;
     cout << endl;
     while (true)
     {

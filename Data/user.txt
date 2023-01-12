@@ -2,8 +2,14 @@ vu113,Dao Anh Vu,0123456,057482932,460,Ha Noi,This house is very nice,1,22/12/20
 deptraicogisai,Le Van Luyen,1214,0489283922,540,Sai Gon,House is a little old but still good to use,1,05/01/2022,07/01/2022,06/01/2022,07/01/2022,vu113,-10.000000,20,0.000000,0,9.250000,4,house:vu113 rated 10 with a comment: this house is very nice
 homeless,Ngo Ba Kha,ratlavui,078237382,500,Sai Gon,Just bought my first property. Brand new,0,,,,,,0.000000,90,0.000000,0,0.000000,0
 DK,Dinh Khai,dinhkhai,0944345345,500,Ha Noi,Wack,0,,,,,,0.000000,250,0.000000,0,0.000000,0
-dinhkhai1,nguyen dinh khai,dinhkhai1,0944353445,500,Hue,This house is lame,1,27/09/2022,12/01/2023,,,,7.000000,50,0.000000,0,0.000000,0
+dinhkhai1,nguyen dinh khai,dinhkhai1,0944353445,550,Hue,This house is lame,1,27/09/2022,12/01/2023,06/01/2023,07/01/2023,Member1,7.000000,50,0.000000,0,0.000000,0,request: Member1:06/01/2023:07/01/2023:accepted:50
 test1,test,test1,0952554,580,Ha Noi,This is for testing,1,1/1/2023,10/1/2023,4/1/2023,9/1/2023,test2,-10.000000,20,0.000000,0,0.000000,0,request: test2:3/1/2023:7/1/2023:accepted:20,request: test3:4/1/2023:9/1/2023:rejected:20
 test2,test,test2,095353543,420,,,0,,,,,,0.000000,0,0.000000,0,0.000000,0
 test3,test,test3,093453534,500,,,0,,,,,,0.000000,0,0.000000,0,0.000000,0
 test4,test,test4,0945345,500,,,0,,,,,,0.000000,0,0.000000,0,0.000000,0
+Member1,Nguyen Van A,123456,0909090909,750,Ha Noi,House with a view of Hoan Kiem lake,1,01/01/2023,01/03/2023,09/01/2023,10/01/2023,Member2,-10.000000,100,0.000000,0,10.000000,1,request: Member2:09/01/2023:10/01/2023:accepted:100,house:Member2 rated 10 with a comment: Good food
+Member2,Member2,123456,0808080808,400,,,0,,,,,,0.000000,0,10.000000,1,0.000000,0,person:Member1 rated 10 with a comment: Polite customer
+Member3,Member3,123456,0821312334,300,,,0,,,,,,0.000000,0,0.000000,0,0.000000,0
+Member4,Member4,123456,0123456789,500,,,0,,,,,,0.000000,0,0.000000,0,0.000000,0
+Member5,Member5,123456,0123456789,500,,,0,,,,,,0.000000,0,0.000000,0,0.000000,0
+Member6,Member6,123456,0123456789,500,,,0,,,,,,0.000000,0,0.000000,0,0.000000,0
